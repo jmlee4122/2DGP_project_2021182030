@@ -1,2 +1,0 @@
-class BackGround:
-    pass
