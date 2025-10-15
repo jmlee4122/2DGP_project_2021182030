@@ -5,6 +5,10 @@ class StateMachine:
         pass
 
     def update(self):
+        next_stage = self.current_state.exit()
+        if next_stage:
+            self.current_state = next_stage
+        self.current_state.enter()
         pass
 
     def draw(self):

@@ -19,13 +19,14 @@ class Stage01:
         pass
 
     def do(self):
-        print("enter Stage01")
         pass
 
     def enter(self):
+        print("enter Stage01")
         pass
 
     def exit(self):
+        return Stage02(self.back_ground) # 다음 스테이지로 전환
         pass
 
     def draw(self):
@@ -34,7 +35,6 @@ class Stage01:
         self.building_1.draw(1300, 1080 / 2, 500, 1000)
         self.building_2.draw(800, 300, 600, 800)
         self.building_3.draw(400, 1080 / 2, 500, 1000)
-
         self.fence.draw(1920 / 2, 650)
         self.tile.draw(1920 / 2, 1080 / 2)
         self.power_pole.draw(1600, 1080 / 2)
@@ -42,6 +42,24 @@ class Stage01:
 
 class Stage02:
     def __init__(self, back_ground):
+        self.back_ground = back_ground
+
+        self.back_color = load_image(file_path + 'bg_color.png')
+        pass
+
+    def do(self):
+        self.back_ground = Stage03(self.back_ground)
+        pass
+
+    def enter(self):
+        print("enter Stage02")
+        pass
+
+    def exit(self):
+        pass
+
+    def draw(self):
+        self.back_color.draw(1920 / 2, 1080 / 2)
         pass
 
 class Stage03:
@@ -55,8 +73,8 @@ class BackGround:
         self.STATE_MACHINE = StateMachine(self.STAGE)
         pass
 
-    # def update(self):
-    #     self.STATE_MACHINE.update() # 상태 머신으로 하여금 업데이트
+    def update(self):
+        self.STATE_MACHINE.update() # 상태 머신으로 하여금 업데이트
 
     def draw(self):
         self.STATE_MACHINE.draw() # 상태 머신으로 하여금 그리기
