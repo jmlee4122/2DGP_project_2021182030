@@ -3,13 +3,14 @@ from pico2d import load_image
 from state_machine import StateMachine
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a
 
-file_path = '2DGP_background/stage_1/'
+
 
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
 class Stage01:
     def __init__(self, back_ground):
+        file_path = '2DGP_background/stage_1/'
         self.back_ground = back_ground
 
         self.back_color = load_image(file_path + 'bg_color.png')
@@ -42,9 +43,16 @@ class Stage01:
 
 class Stage02:
     def __init__(self, back_ground):
+        file_path = '2DGP_background/stage_2/'
         self.back_ground = back_ground
 
         self.back_color = load_image(file_path + 'bg_color.png')
+        self.tile = load_image(file_path + 'bg_tile.png')
+        self.cloud = load_image(file_path + 'bg_cloud.png')
+        self.building_1 = load_image(file_path + 'bg_building_stage02_1.png')
+        self.building_2 = load_image(file_path + 'bg_building_stage02_2.png')
+        self.mid_sign = load_image(file_path + 'bg_mid_sign.png')
+        self.fence = load_image(file_path + 'bg_fence.png')
 
     def do(self):
         pass
@@ -57,9 +65,16 @@ class Stage02:
 
     def draw(self):
         self.back_color.draw(1920 / 2, 1080 / 2)
+        self.cloud.draw(1920 / 2, 1080 / 2)
+        self.building_1.draw(1300, 1080 / 2, 500, 1000)
+        self.building_2.draw(800, 300, 600, 800)
+        self.fence.draw(1920 / 2, 650)
+        self.tile.draw(1920 / 2, 1080 / 2)
+        self.mid_sign.draw(1600, 1080 / 2)
 
 class Stage03:
     def __init__(self, back_ground):
+        file_path = '2DGP_background/stage_3/'
         self.back_ground = back_ground
 
         self.back_color = load_image(file_path + 'bg_color.png')
