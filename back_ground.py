@@ -67,7 +67,7 @@ class Stage02:
         self.back_color.draw(1920 / 2, 1080 / 2)
         self.cloud.draw(1920 / 2, 1080 / 2)
         self.building_1.draw(1300, 1080 / 2, 500, 1000)
-        self.building_2.draw(800, 300, 600, 800)
+        self.building_2.draw(800, 500, 600, 800)
         self.fence.draw(1920 / 2, 650)
         self.tile.draw(1920 / 2, 1080 / 2)
         self.mid_sign.draw(1600, 1080 / 2)
@@ -78,7 +78,12 @@ class Stage03:
         self.back_ground = back_ground
 
         self.back_color = load_image(file_path + 'bg_color.png')
+        self.tile = load_image(file_path + 'bg_tile.png')
         self.cloud = load_image(file_path + 'bg_cloud.png')
+        self.building_1 = load_image(file_path + 'bg_building_stage03_1.png')
+        self.building_2 = load_image(file_path + 'bg_building_stage03_2.png')
+        self.power_pole = load_image(file_path + 'bg_power_pole.png')
+        self.fence = load_image(file_path + 'bg_fence.png')
 
     def do(self):
         pass
@@ -92,6 +97,11 @@ class Stage03:
     def draw(self):
         self.back_color.draw(1920 / 2, 1080 / 2)
         self.cloud.draw(1920 / 2, 1080 / 2)
+        self.building_1.draw(1300, 1080 / 2, 500, 1000)
+        self.building_2.draw(300, 1080 / 2, 600, 800)
+        self.fence.draw(1920 / 2, 650)
+        self.tile.draw(1920 / 2, 1080 / 2)
+        self.power_pole.draw(400, 1080 / 2)
 
 
 class BackGround:
