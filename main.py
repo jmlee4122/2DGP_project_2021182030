@@ -1,6 +1,8 @@
 from pico2d import *
 
 from back_ground import BackGround
+from user_character import UserChar
+
 
 def reset_world():
     global world
@@ -10,6 +12,9 @@ def reset_world():
 
     backGround = BackGround()
     world.append(backGround)
+
+    user_character = UserChar()
+    world.append(user_character)
     pass
 
 def handle_events():
