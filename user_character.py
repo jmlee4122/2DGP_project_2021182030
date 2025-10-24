@@ -44,20 +44,16 @@ class Jump:
         self.frame = 0
         print('enter Jump')
 
-
     def exit(self, e):
         self.uc.frame = 0
 
     def do(self):
-        self.frame += 1
-        self.uc.x += self.uc.delta_move * 5
-        if self.frame - 1 >= 3:
-            self.uc.y -= 100
-        else:
-            self.uc.y += 100
-
         if self.frame == 6:
             self.uc.STATE_MACHINE.handle_state_event(('RANDED', None))
+        else:
+            self.frame += 1
+            self.uc.x += self.uc.delta_move * 5
+            self.uc.y = 400 + (-30 * (self.frame - 1) * (self.frame - 1 - 5))
 
     def draw(self):
         if self.uc.face_dir == 1:
@@ -70,7 +66,7 @@ class Jump:
                 (self.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
                 0, 'h', self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
             )
-        delay(0.05)
+        delay(0.075)
 
 class Run:
     def __init__(self, user_character):
@@ -111,7 +107,7 @@ class Run:
             self.frame * self.clip_width, self.clip_bottom * self.clip_height,
             self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
         )
-        delay(0.005)
+        delay(0.01)
 
 class Idle:
     def __init__(self, user_character):
