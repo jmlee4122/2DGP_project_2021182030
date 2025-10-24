@@ -2,6 +2,8 @@ from pico2d import load_image, get_time, delay
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP
 from state_machine import StateMachine
 
+def is_randed(e):
+    return e[0] == 'RANDED'
 def upward_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
 def right_down(e):
@@ -39,33 +41,36 @@ class Jump:
         self.frame = 0
 
     def enter(self, e):
-        self.uc.frame = 0
+        self.frame = 0
         print('enter Jump')
 
 
     def exit(self, e):
-        self.frame = 0
+        self.uc.frame = 0
 
     def do(self):
-        self.frame = (self.frame + 1) % 6
+        self.frame += 1
         self.uc.x += self.uc.delta_move * 5
-        if self.frame >= 3:
-            self.uc.y -= 50
+        if self.frame - 1 >= 3:
+            self.uc.y -= 100
         else:
-            self.uc.y += 50
+            self.uc.y += 100
+
+        if self.frame == 6:
+            self.uc.STATE_MACHINE.handle_state_event(('RANDED', None))
 
     def draw(self):
         if self.uc.face_dir == 1:
             self.image.clip_draw(
-                self.frame * self.clip_width, 0, self.clip_width, self.clip_height,
-                self.uc.x, self.uc.y, 300, 300
+                (self.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
+                self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
             )
         else:
             self.image.clip_composite_draw(
-                self.frame * self.clip_width, 0, self.clip_width, self.clip_height,
-                0, 'h', self.uc.x, self.uc.y, 300, 300
+                (self.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
+                0, 'h', self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
             )
-        delay(0.1)
+        delay(0.05)
 
 class Run:
     def __init__(self, user_character):
@@ -156,7 +161,7 @@ class UserChar:
             {  # 룰
                 self.IDLE: {upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
                 self.RUN: {upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
-                self.JUMP: {upward_down: self.IDLE},
+                self.JUMP: {is_randed: self.IDLE},
                 self.DEATH: {}
             }
         )
