@@ -1,5 +1,5 @@
 from pico2d import load_image, delay
-from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP
+from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP, SDLK_a
 from state_machine import StateMachine
 
 def is_randed(e):
@@ -14,22 +14,43 @@ def left_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
+def a_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
 class Death:
     def __init__(self, user_character):
-        self.user_char = user_character
+        self.uc = user_character
+        file_path = '2DGP_character/user_character/'
+        self.image = load_image(file_path + 'user_death_sprite_sheet.png')
+        self.clip_width = 402
+        self.clip_height = 382
 
     def enter(self, e):
-        pass
+        self.uc.frame = 0
+        self.uc.is_jumping = False
+        self.uc.is_moving = False
+        self.uc.y = 400
 
     def exit(self, e):
         pass
 
     def do(self):
+        if self.uc.frame == 8:
+            self.uc.frame = 7
+        self.uc.frame += 1
         pass
 
     def draw(self):
-        pass
+        if self.uc.face_dir == 1:
+            self.image.clip_draw(
+                (self.uc.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
+                self.uc.x, self.uc.y, 300, 300
+            )
+        else:
+            self.image.clip_composite_draw(
+                (self.uc.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
+                0, 'h', self.uc.x, self.uc.y, 300, 300
+            )
 
 class Jump:
     def __init__(self, user_character):
@@ -164,11 +185,12 @@ class UserChar:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
-                self.JUMP: {(lambda e: is_randed(e) and self.is_moving): self.RUN,
+                self.IDLE: {a_down: self.DEATH, upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
+                self.RUN: {a_down: self.DEATH, upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
+                self.JUMP: {a_down: self.DEATH,
+                            (lambda e: is_randed(e) and self.is_moving): self.RUN,
                             (lambda e: is_randed(e) and not self.is_moving): self.IDLE},
-                self.DEATH: {}
+                self.DEATH: {} # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
 
@@ -185,6 +207,9 @@ class UserChar:
             self.STATE_MACHINE.handle_state_event(('INPUT', event))
 
     def jump_handle_event(self, event):
+        if event.type == SDL_KEYDOWN and event.key == SDLK_a:
+            self.STATE_MACHINE.handle_state_event(('INPUT', event))
+            return
         if self.is_jumping and self.is_moving:  # 이동 점프
             if event.type == SDL_KEYDOWN:  # 이동 점프 중간에 반대 방향키가 눌린 경우
                 if event.key == SDLK_RIGHT:
