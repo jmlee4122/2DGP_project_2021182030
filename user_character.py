@@ -52,7 +52,6 @@ class Run:
         self.clip_height = 382
         self.clip_bottom = 0
         self.frame = 0
-        self.frame_delay = 0
 
     def enter(self, e):
         if right_down(e) or left_up(e):
