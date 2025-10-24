@@ -1,5 +1,5 @@
-from pico2d import load_image, get_time, delay
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP
+from pico2d import load_image, delay
+from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP
 from state_machine import StateMachine
 
 def is_randed(e):
@@ -80,6 +80,7 @@ class Run:
 
     def enter(self, e):
         self.uc.frame = 0
+        self.uc.is_moving = True
         if right_down(e) or left_up(e):
             self.uc.delta_move = self.uc.face_dir = 1
             self.clip_bottom = 0
@@ -121,6 +122,7 @@ class Idle:
     def enter(self, e):
         self.uc.delta_move = 0
         self.uc.frame = 0
+        self.uc.is_moving = False
 
     def exit(self, e):
         pass
@@ -147,6 +149,7 @@ class UserChar:
         self.frame = 0
         self.face_dir = 1 # 1: right, -1: left
         self.delta_move = 0
+        self.is_moving = False
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -157,7 +160,8 @@ class UserChar:
             {  # 룰
                 self.IDLE: {upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
                 self.RUN: {upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
-                self.JUMP: {is_randed: self.IDLE},
+                self.JUMP: {(lambda e: is_randed(e) and self.is_moving): self.RUN,
+                            (lambda e: is_randed(e) and not self.is_moving): self.IDLE},
                 self.DEATH: {}
             }
         )
