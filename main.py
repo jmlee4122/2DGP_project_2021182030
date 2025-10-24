@@ -7,6 +7,7 @@ from user_character import UserChar
 def reset_world():
     global world
     global backGround
+    global user_character
 
     world = []
 
@@ -28,6 +29,8 @@ def handle_events():
             running = False
         else:
             backGround.handle_event(event)
+            user_character.handle_event(event)
+            pass
 
 
 def update_world():
