@@ -42,17 +42,19 @@ class Jump:
 
     def enter(self, e):
         self.frame = 0
+        self.uc.is_jumping = True
         print('enter Jump')
 
     def exit(self, e):
         self.uc.frame = 0
+        self.uc.is_jumping = False
 
     def do(self):
         if self.frame == 6:
             self.uc.STATE_MACHINE.handle_state_event(('RANDED', None))
         else:
             self.frame += 1
-            self.uc.x += self.uc.delta_move * 5
+            self.uc.x += self.uc.delta_move * 20
             self.uc.y = 400 + (-30 * (self.frame - 1) * (self.frame - 1 - 5))
 
     def draw(self):
@@ -66,7 +68,9 @@ class Jump:
                 (self.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
                 0, 'h', self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
             )
-        delay(0.075)
+        delay(0.01)
+
+
 
 class Run:
     def __init__(self, user_character):
@@ -142,6 +146,7 @@ class Idle:
                 self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
             )
 
+
 class UserChar:
     def __init__(self):
 
@@ -150,6 +155,7 @@ class UserChar:
         self.face_dir = 1 # 1: right, -1: left
         self.delta_move = 0
         self.is_moving = False
+        self.is_jumping = False
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -173,4 +179,47 @@ class UserChar:
         self.STATE_MACHINE.draw()
 
     def handle_event(self, event):
-        self.STATE_MACHINE.handle_state_event(('INPUT', event))
+        if self.is_jumping:
+            self.jump_handle_event(event)
+        else:
+            self.STATE_MACHINE.handle_state_event(('INPUT', event))
+
+    def jump_handle_event(self, event):
+        if self.is_jumping and self.is_moving:  # 이동 점프
+            if event.type == SDL_KEYDOWN:  # 이동 점프 중간에 반대 방향키가 눌린 경우
+                if event.key == SDLK_RIGHT:
+                    self.delta_move = 0
+                    self.face_dir = 1
+                    self.is_moving = False
+                elif event.key == SDLK_LEFT:
+                    self.delta_move = 0
+                    self.face_dir = -1
+                    self.is_moving = False
+            elif event.type == SDL_KEYUP:  # 이동 점프 중간에 이동 방향키가 떼어진 경우
+                if event.key == SDLK_RIGHT:
+                    self.delta_move = 0
+                    self.face_dir = 1
+                    self.is_moving = False
+                elif event.key == SDLK_LEFT:
+                    self.delta_move = 0
+                    self.face_dir = -1
+                    self.is_moving = False
+        elif self.is_jumping and not self.is_moving:  # 제자리 점프
+            if event.type == SDL_KEYDOWN:  # 제자리 점프 중간에 방향키가 눌린 경우
+                if event.key == SDLK_RIGHT:
+                    self.delta_move = 1
+                    self.face_dir = 1
+                    self.is_moving = True
+                elif event.key == SDLK_LEFT:
+                    self.delta_move = -1
+                    self.face_dir = -1
+                    self.is_moving = True
+            elif event.type == SDL_KEYUP:  # 제자리 점프 중간에 방향키가 떼어진 경우
+                if event.key == SDLK_RIGHT:
+                    self.delta_move = -1
+                    self.face_dir = -1
+                    self.is_moving = True
+                elif event.key == SDLK_LEFT:
+                    self.delta_move = 1
+                    self.face_dir = 1
+                    self.is_moving = True
