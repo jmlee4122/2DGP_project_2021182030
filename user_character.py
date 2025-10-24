@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, delay
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a
 from state_machine import StateMachine
 
@@ -52,6 +52,7 @@ class Run:
         self.clip_height = 382
         self.clip_bottom = 0
         self.frame = 0
+        self.frame_delay = 0
 
     def enter(self, e):
         if right_down(e) or left_up(e):
@@ -67,7 +68,7 @@ class Run:
     def do(self):
         self.uc.frame = (self.uc.frame + 1) % 12
         self.frame = self.uc.frame
-        self.uc.x += self.uc.delta_move * 5
+        self.uc.x += self.uc.delta_move * 8
 
         if self.uc.face_dir == 1 and self.uc.frame >= 6:
             self.clip_bottom = 1
@@ -87,6 +88,8 @@ class Run:
                 self.frame * self.clip_width, self.clip_bottom * self.clip_height,
                 self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
             )
+        delay(0.005)
+
 
 
 class Idle:
