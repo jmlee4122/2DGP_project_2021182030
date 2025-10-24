@@ -1,7 +1,9 @@
 from pico2d import load_image, get_time, delay
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP
 from state_machine import StateMachine
 
+def upward_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
 def right_up(e):
@@ -16,32 +18,54 @@ class Death:
         self.user_char = user_character
 
     def enter(self, e):
-       pass
+        pass
 
     def exit(self, e):
         pass
 
     def do(self):
-       pass
+        pass
 
     def draw(self):
-       pass
+        pass
 
 class Jump:
     def __init__(self, user_character):
-        self.user_char = user_character
+        self.uc = user_character
+        file_path = '2DGP_character/user_character/'
+        self.image = load_image(file_path + 'user_jump_sprite_sheet.png')
+        self.clip_width = 546
+        self.clip_height = 490
+        self.clip_bottom = 0
+        self.frame = 0
 
     def enter(self, e):
-       pass
+        self.uc.frame = 0
+        print('enter Jump')
+
 
     def exit(self, e):
-        pass
+        self.frame = 0
 
     def do(self):
-       pass
+        self.frame = (self.frame + 1) % 6
+        self.uc.x += self.uc.delta_move * 5
+        if self.frame >= 3:
+            self.uc.y -= 50
+        else:
+            self.uc.y += 50
+
+        if self.uc.face_dir == 1:
+            self.clip_bottom = 0
+        elif self.uc.face_dir == -1:
+            self.clip_bottom = 1
 
     def draw(self):
-       pass
+        self.image.clip_draw(
+            self.frame * self.clip_width, self.clip_bottom * self.clip_height,
+            self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
+        )
+        delay(0.1)
 
 class Run:
     def __init__(self, user_character):
@@ -78,16 +102,10 @@ class Run:
             self.frame -= 6
 
     def draw(self):
-        if self.uc.face_dir == 1:  # right
-            self.image.clip_draw(
-                self.frame * self.clip_width, self.clip_bottom * self.clip_height,
-                self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
-            )
-        else:  # face_dir == -1: # left
-            self.image.clip_draw(
-                self.frame * self.clip_width, self.clip_bottom * self.clip_height,
-                self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
-            )
+        self.image.clip_draw(
+            self.frame * self.clip_width, self.clip_bottom * self.clip_height,
+            self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
+        )
         delay(0.005)
 
 class Idle:
@@ -136,8 +154,8 @@ class UserChar:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
+                self.IDLE: {upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
+                self.RUN: {upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
                 self.JUMP: {},
                 self.DEATH: {}
             }
