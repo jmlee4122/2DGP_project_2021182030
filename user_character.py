@@ -36,7 +36,6 @@ class Jump:
         self.image = load_image(file_path + 'user_jump_sprite_sheet.png')
         self.clip_width = 546
         self.clip_height = 490
-        self.clip_bottom = 0
         self.frame = 0
 
     def enter(self, e):
@@ -55,16 +54,17 @@ class Jump:
         else:
             self.uc.y += 50
 
-        if self.uc.face_dir == 1:
-            self.clip_bottom = 0
-        elif self.uc.face_dir == -1:
-            self.clip_bottom = 1
-
     def draw(self):
-        self.image.clip_draw(
-            self.frame * self.clip_width, self.clip_bottom * self.clip_height,
-            self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
-        )
+        if self.uc.face_dir == 1:
+            self.image.clip_draw(
+                self.frame * self.clip_width, 0, self.clip_width, self.clip_height,
+                self.uc.x, self.uc.y, 300, 300
+            )
+        else:
+            self.image.clip_composite_draw(
+                self.frame * self.clip_width, 0, self.clip_width, self.clip_height,
+                0, 'h', self.uc.x, self.uc.y, 300, 300
+            )
         delay(0.1)
 
 class Run:
@@ -156,7 +156,7 @@ class UserChar:
             {  # 룰
                 self.IDLE: {upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
                 self.RUN: {upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
-                self.JUMP: {},
+                self.JUMP: {upward_down: self.IDLE},
                 self.DEATH: {}
             }
         )
