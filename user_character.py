@@ -54,6 +54,7 @@ class Run:
         self.frame = 0
 
     def enter(self, e):
+        self.uc.frame = 0
         if right_down(e) or left_up(e):
             self.uc.delta_move = self.uc.face_dir = 1
             self.clip_bottom = 0
@@ -89,8 +90,6 @@ class Run:
             )
         delay(0.005)
 
-
-
 class Idle:
     def __init__(self, user_character):
         self.uc = user_character
@@ -102,6 +101,7 @@ class Idle:
 
     def enter(self, e):
         self.uc.delta_move = 0
+        self.uc.frame = 0
 
     def exit(self, e):
         pass
