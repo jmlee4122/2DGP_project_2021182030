@@ -103,6 +103,9 @@ class Run:
         self.uc = user_character
         file_path = '2DGP_character/user_character/'
         self.image = load_image(file_path + 'user_running_sprite_sheet.png')
+        file_path = '2DGP_attack/'
+        self.attack_image_R = load_image(file_path + 'attack_R.png')
+        self.attack_image_L = load_image(file_path + 'attack_L.png')
         self.clip_width = 402
         self.clip_height = 382
         self.clip_bottom = 0
@@ -121,6 +124,7 @@ class Run:
     def exit(self, e):
         if space_down(e):
             self.uc.attack()
+            self.uc.is_attacking = True
 
     def do(self):
         self.uc.frame = (self.uc.frame + 1) % 12
@@ -135,11 +139,18 @@ class Run:
             self.frame -= 6
 
     def draw(self):
-        self.image.clip_draw(
-            self.frame * self.clip_width, self.clip_bottom * self.clip_height,
-            self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
-        )
-        delay(0.01)
+        if self.uc.is_attacking:
+            if self.uc.face_dir == 1:
+                self.attack_image_R.draw(self.uc.x, self.uc.y, 300, 300)
+            else:
+                self.attack_image_L.draw(self.uc.x, self.uc.y, 300, 300)
+            self.uc.is_attacking = False
+        else:
+            self.image.clip_draw(
+                self.frame * self.clip_width, self.clip_bottom * self.clip_height,
+                self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
+            )
+            delay(0.01)
 
 class Idle:
     def __init__(self, user_character):
