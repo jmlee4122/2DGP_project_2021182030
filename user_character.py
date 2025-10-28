@@ -146,6 +146,9 @@ class Idle:
         self.uc = user_character
         file_path = '2DGP_character/user_character/'
         self.image = load_image(file_path + 'user_idle_sprite_sheet.png')
+        file_path = '2DGP_attack/'
+        self.attack_image_R = load_image(file_path + 'attack_R.png')
+        self.attack_image_L = load_image(file_path + 'attack_L.png')
         self.clip_width = 402
         self.clip_height = 382
         self.clip_bottom = 0
@@ -158,33 +161,40 @@ class Idle:
     def exit(self, e):
         if space_down(e):
             self.uc.attack()
-
+            self.uc.is_attacking = True
 
     def do(self):
         pass
 
     def draw(self):
-        if self.uc.face_dir == 1:  # right
-            self.image.clip_draw(
-                3 * self.clip_width, self.clip_bottom * self.clip_height,
-                self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
-            )
-        else:  # face_dir == -1: # left
-            self.image.clip_draw(
-                0 * self.clip_width, self.clip_bottom * self.clip_height,
-                self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
-            )
+        if self.uc.is_attacking:
+            if self.uc.face_dir == 1:
+                self.attack_image_R.draw(self.uc.x, self.uc.y, 300, 300)
+            else:
+                self.attack_image_L.draw(self.uc.x, self.uc.y, 300, 300)
+            self.uc.is_attacking = False
+        else:
+            if self.uc.face_dir == 1:  # right
+                self.image.clip_draw(
+                    3 * self.clip_width, self.clip_bottom * self.clip_height,
+                    self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
+                )
+            else:  # face_dir == -1: # left
+                self.image.clip_draw(
+                    0 * self.clip_width, self.clip_bottom * self.clip_height,
+                    self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
+                )
 
 
 class UserChar:
     def __init__(self):
-
         self.x, self.y = 960, 400
         self.frame = 0
         self.face_dir = 1 # 1: right, -1: left
         self.delta_move = 0
         self.is_moving = False
         self.is_jumping = False
+        self.is_attacking = False
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -193,8 +203,10 @@ class UserChar:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {space_down: self.IDLE, a_down: self.DEATH, upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {space_down: self.RUN, a_down: self.DEATH, upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
+                self.IDLE: {space_down: self.IDLE, a_down: self.DEATH, upward_down: self.JUMP,
+                            right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
+                self.RUN: {space_down: self.RUN, a_down: self.DEATH, upward_down: self.JUMP,
+                           right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
                 self.JUMP: {space_down: self.JUMP, a_down: self.DEATH,
                             (lambda e: is_randed(e) and self.is_moving): self.RUN,
                             (lambda e: is_randed(e) and not self.is_moving): self.IDLE},
@@ -261,6 +273,5 @@ class UserChar:
         print('attack')
         loc_x = 55 * self.face_dir
         loc_y = 20
-
         bullet = Bullet(self.x + loc_x, self.y + loc_y, self.face_dir * 20)
         game_world.add_object(bullet, 1)
