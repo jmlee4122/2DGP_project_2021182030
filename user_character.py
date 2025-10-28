@@ -104,8 +104,8 @@ class Run:
         file_path = '2DGP_character/user_character/'
         self.image = load_image(file_path + 'user_running_sprite_sheet.png')
         file_path = '2DGP_attack/'
-        self.attack_image_R = load_image(file_path + 'attack_R.png')
-        self.attack_image_L = load_image(file_path + 'attack_L.png')
+        self.attack_image_R = load_image(file_path + 'uc_attack_R.png')
+        self.attack_image_L = load_image(file_path + 'uc_attack_L.png')
         self.clip_width = 402
         self.clip_height = 382
         self.clip_bottom = 0
@@ -158,8 +158,8 @@ class Idle:
         file_path = '2DGP_character/user_character/'
         self.image = load_image(file_path + 'user_idle_sprite_sheet.png')
         file_path = '2DGP_attack/'
-        self.attack_image_R = load_image(file_path + 'attack_R.png')
-        self.attack_image_L = load_image(file_path + 'attack_L.png')
+        self.attack_image_R = load_image(file_path + 'uc_attack_R.png')
+        self.attack_image_L = load_image(file_path + 'uc_attack_L.png')
         self.clip_width = 402
         self.clip_height = 382
         self.clip_bottom = 0
