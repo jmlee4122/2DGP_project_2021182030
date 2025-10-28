@@ -1,5 +1,8 @@
 from pico2d import load_image, delay
 from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP, SDLK_a, SDLK_SPACE
+
+import game_world
+from bullet import Bullet
 from state_machine import StateMachine
 
 def is_randed(e):
@@ -256,3 +259,5 @@ class UserChar:
 
     def attack(self):
         print('attack')
+        bullet = Bullet(self.x, self.y, self.face_dir * 20)
+        game_world.add_object(bullet, 1)
