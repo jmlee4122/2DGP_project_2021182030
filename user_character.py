@@ -116,7 +116,8 @@ class Run:
             self.clip_bottom = 2
 
     def exit(self, e):
-        pass
+        if space_down(e):
+            self.uc.attack()
 
     def do(self):
         self.uc.frame = (self.uc.frame + 1) % 12
@@ -152,7 +153,9 @@ class Idle:
         self.uc.is_moving = False
 
     def exit(self, e):
-        pass
+        if space_down(e):
+            self.uc.attack()
+
 
     def do(self):
         pass
@@ -252,4 +255,4 @@ class UserChar:
                     self.is_moving = True
 
     def attack(self):
-        pass
+        print('attack')

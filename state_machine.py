@@ -18,7 +18,7 @@ class StateMachine:
                 self.next_state = self.rules[self.cur_state][check_event]
                 self.cur_state.exit(state_event)
                 self.next_state.enter(state_event)
-                print(f'{self.cur_state.__class__.__name__} == {event_to_string(state_event)} ==> {self.next_state.__class__.__name__}')
+                #print(f'{self.cur_state.__class__.__name__} == {event_to_string(state_event)} ==> {self.next_state.__class__.__name__}')
                 self.cur_state = self.next_state
                 return
-        print(f'처리되지 않은 이벤트 {event_to_string(state_event)} 가 발생')
+        #print(f'처리되지 않은 이벤트 {event_to_string(state_event)} 가 발생')
