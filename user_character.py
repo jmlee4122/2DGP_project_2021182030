@@ -259,5 +259,8 @@ class UserChar:
 
     def attack(self):
         print('attack')
-        bullet = Bullet(self.x, self.y, self.face_dir * 20)
+        loc_x = 55 * self.face_dir
+        loc_y = 20
+
+        bullet = Bullet(self.x + loc_x, self.y + loc_y, self.face_dir * 20)
         game_world.add_object(bullet, 1)
