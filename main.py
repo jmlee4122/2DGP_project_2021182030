@@ -1,22 +1,19 @@
 from pico2d import *
 
+import game_world
 from back_ground import BackGround
 from user_character import UserChar
 
 
 def reset_world():
-    global world
     global backGround
     global user_character
 
-    world = []
-
     backGround = BackGround()
-    world.append(backGround)
+    game_world.add_object(backGround, 0)
 
     user_character = UserChar()
-    world.append(user_character)
-    pass
+    game_world.add_object(user_character, 1)
 
 def handle_events():
     global running
@@ -34,13 +31,12 @@ def handle_events():
 
 
 def update_world():
-    for o in world:
-        o.update()
+    game_world.update()
+
 
 def render_world():
     clear_canvas()
-    for o in world:
-        o.draw()
+    game_world.render()
     update_canvas()
 
 running = True
