@@ -1,5 +1,5 @@
 from pico2d import load_image, delay
-from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP, SDLK_a
+from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP, SDLK_a, SDLK_SPACE
 from state_machine import StateMachine
 
 def is_randed(e):

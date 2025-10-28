@@ -1,12 +1,12 @@
 from pico2d import load_image
 
 from state_machine import StateMachine
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a
+from sdl2 import SDL_KEYDOWN, SDLK_z
 
 
 
-def space_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+def z_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_z
 
 class Stage01:
     def __init__(self, back_ground):
@@ -112,9 +112,9 @@ class BackGround:
         self.STATE_MACHINE = StateMachine(
             self.STAGE_01,
             {
-                self.STAGE_01: {space_down: self.STAGE_02},
-                self.STAGE_02: {space_down: self.STAGE_03},
-                self.STAGE_03: {space_down: self.STAGE_01}
+                self.STAGE_01: {z_down: self.STAGE_02},
+                self.STAGE_02: {z_down: self.STAGE_03},
+                self.STAGE_03: {z_down: self.STAGE_01}
             }
         )
 
