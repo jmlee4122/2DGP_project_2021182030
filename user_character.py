@@ -4,6 +4,8 @@ from state_machine import StateMachine
 
 def is_randed(e):
     return e[0] == 'RANDED'
+def space_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 def upward_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
 def right_down(e):
@@ -185,9 +187,9 @@ class UserChar:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {a_down: self.DEATH, upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {a_down: self.DEATH, upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
-                self.JUMP: {a_down: self.DEATH,
+                self.IDLE: {space_down: self.IDLE, a_down: self.DEATH, upward_down: self.JUMP, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
+                self.RUN: {space_down: self.RUN, a_down: self.DEATH, upward_down: self.JUMP, right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
+                self.JUMP: {space_down: self.JUMP, a_down: self.DEATH,
                             (lambda e: is_randed(e) and self.is_moving): self.RUN,
                             (lambda e: is_randed(e) and not self.is_moving): self.IDLE},
                 self.DEATH: {} # 죽음 상태에서는 아무 이벤트도 처리하지 않음
@@ -248,3 +250,6 @@ class UserChar:
                     self.delta_move = 1
                     self.face_dir = 1
                     self.is_moving = True
+
+    def attack(self):
+        pass
