@@ -160,6 +160,7 @@ class Idle:
         file_path = '2DGP_attack/'
         self.attack_image_R = load_image(file_path + 'uc_attack_R.png')
         self.attack_image_L = load_image(file_path + 'uc_attack_L.png')
+        self.attack_image_effect = load_image(file_path + 'uc_bullet_effect.png')
         self.clip_width = 402
         self.clip_height = 382
         self.clip_bottom = 0
@@ -179,10 +180,14 @@ class Idle:
 
     def draw(self):
         if self.uc.is_attacking:
+            effect_loc_x = 60 * self.uc.face_dir
+            effect_loc_y = 15
             if self.uc.face_dir == 1:
                 self.attack_image_R.draw(self.uc.x, self.uc.y, 300, 300)
+                self.attack_image_effect.draw(self.uc.x + effect_loc_x, self.uc.y + effect_loc_y, 80, 80)
             else:
                 self.attack_image_L.draw(self.uc.x, self.uc.y, 300, 300)
+                self.attack_image_effect.draw(self.uc.x + effect_loc_x, self.uc.y + effect_loc_y, 80, 80)
             self.uc.is_attacking = False
         else:
             if self.uc.face_dir == 1:  # right
