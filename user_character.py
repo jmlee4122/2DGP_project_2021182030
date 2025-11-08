@@ -35,6 +35,11 @@ TIME_PER_ACTION_DEATH = 0.5
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
 FRAMES_PER_ACTION_DEATH = 8
 
+TIME_PER_ACTION_JUMP = 0.5
+ACTION_PER_TIME_JUMP = 1.0 / TIME_PER_ACTION_JUMP
+FRAMES_PER_ACTION_JUMP = 6
+GRAVITY = 9.8  # 중력 가속도 (m/s²)
+
 
 class Death:
     def __init__(self, user_character):
@@ -74,17 +79,31 @@ class Death:
             )
 
 class Jump:
-    def __init__(self, user_character):
+    def __init__(self, user_character, init_speed_mps=12.0):
         self.uc = user_character
         file_path = '2DGP_character/user_character/'
         self.image = load_image(file_path + 'user_jump_sprite_sheet.png')
         self.clip_width = 546
         self.clip_height = 490
-        self.frame = 0
+        self.init_speed = init_speed_mps  # 초기 상향 속도 (m/s)
+        self.yv = self.init_speed
+        self.ground_y = self.uc.y
+        # 애니메이션 (한 사이클만 재생)
+        self.anim_frame = 0
+        self.anim_timer = 0.0
+        # 기본 프레임 인터벌(예비값) - 실제 값은 enter()에서 계산
+        self.frame_interval = TIME_PER_ACTION_JUMP / FRAMES_PER_ACTION_JUMP
+        self.EPS = 1.0  # 착지 허용 오차(픽셀)
 
     def enter(self, e):
-        self.frame = 0
+        self.uc.frame = 0
         self.uc.is_jumping = True
+        self.yv = self.init_speed
+        self.ground_y = self.uc.y
+        self.anim_frame = 0
+        self.anim_timer = 0.0
+        flight_time = max(0.01, 2.0 * self.init_speed / GRAVITY)
+        self.frame_interval = flight_time / FRAMES_PER_ACTION_JUMP
         print('enter Jump')
 
     def exit(self, e):
@@ -92,22 +111,33 @@ class Jump:
         self.uc.is_jumping = False
 
     def do(self):
-        if self.frame == 6:
+        dt = game_framework.frame_time
+        if self.anim_frame < FRAMES_PER_ACTION_JUMP - 1:
+            self.anim_timer += dt
+            while self.anim_timer >= self.frame_interval and self.anim_frame < FRAMES_PER_ACTION_JUMP - 1:
+                self.anim_timer -= self.frame_interval
+                self.anim_frame += 1
+        self.uc.frame = self.anim_frame
+
+        # 수평/수직 물리
+        self.uc.x += self.uc.delta_move * RUN_SPEED_PPS * dt
+        self.uc.y += self.yv * dt * PIXEL_PER_METER
+        self.yv -= GRAVITY * dt
+
+        # 착지 판정
+        if self.ground_y is not None and self.uc.y <= self.ground_y + self.EPS and self.yv <= 0:
+            self.uc.y = self.ground_y
             self.uc.STATE_MACHINE.handle_state_event(('RANDED', None))
-        else:
-            self.frame += 1
-            self.uc.x += self.uc.delta_move * 20
-            self.uc.y = 400 + (-30 * (self.frame - 1) * (self.frame - 1 - 5))
 
     def draw(self):
         if self.uc.face_dir == 1:
             self.image.clip_draw(
-                (self.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
+                int(self.uc.frame) * self.clip_width, 0, self.clip_width, self.clip_height,
                 self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
             )
         else:
             self.image.clip_composite_draw(
-                (self.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
+                int(self.uc.frame) * self.clip_width, 0, self.clip_width, self.clip_height,
                 0, 'h', self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
             )
         delay(0.01)
