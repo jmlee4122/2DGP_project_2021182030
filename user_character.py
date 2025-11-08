@@ -30,16 +30,16 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-TIME_PER_ACTION_DEATH = 0.5
+TIME_PER_ACTION_DEATH = 0.3
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
 FRAMES_PER_ACTION_DEATH = 8
 
-TIME_PER_ACTION_JUMP = 0.5
+TIME_PER_ACTION_JUMP = 0.3
 ACTION_PER_TIME_JUMP = 1.0 / TIME_PER_ACTION_JUMP
 FRAMES_PER_ACTION_JUMP = 6
 GRAVITY = 9.8  # 중력 가속도 (m/s²)
 
-TIME_PER_ACTION_RUN = 0.5
+TIME_PER_ACTION_RUN = 0.3
 ACTION_PER_TIME_RUN = 1.0 / TIME_PER_ACTION_JUMP
 FRAMES_PER_ACTION_RUN = 6
 
@@ -143,7 +143,6 @@ class Jump:
                 int(self.uc.frame) * self.clip_width, 0, self.clip_width, self.clip_height,
                 0, 'h', self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
             )
-        delay(0.01)
 
 
 
@@ -198,7 +197,6 @@ class Run:
                 int(self.uc.frame) * self.clip_width, self.clip_bottom * self.clip_height,
                 self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
             )
-            delay(0.01)
 
 class Idle:
     def __init__(self, user_character):
