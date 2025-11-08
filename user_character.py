@@ -292,44 +292,24 @@ class UserChar:
         if event.type == SDL_KEYDOWN and event.key == SDLK_a:
             self.STATE_MACHINE.handle_state_event(('INPUT', event))
             return
-        if self.is_jumping and self.is_moving:  # 이동 점프
-            if event.type == SDL_KEYDOWN:  # 이동 점프 중간에 반대 방향키가 눌린 경우
-                if event.key == SDLK_RIGHT:
-                    self.delta_move = 0
-                    self.face_dir = 1
-                    self.is_moving = False
-                elif event.key == SDLK_LEFT:
-                    self.delta_move = 0
-                    self.face_dir = -1
-                    self.is_moving = False
-            elif event.type == SDL_KEYUP:  # 이동 점프 중간에 이동 방향키가 떼어진 경우
-                if event.key == SDLK_RIGHT:
-                    self.delta_move = 0
-                    self.face_dir = 1
-                    self.is_moving = False
-                elif event.key == SDLK_LEFT:
-                    self.delta_move = 0
-                    self.face_dir = -1
-                    self.is_moving = False
-        elif self.is_jumping and not self.is_moving:  # 제자리 점프
-            if event.type == SDL_KEYDOWN:  # 제자리 점프 중간에 방향키가 눌린 경우
-                if event.key == SDLK_RIGHT:
-                    self.delta_move = 1
-                    self.face_dir = 1
-                    self.is_moving = True
-                elif event.key == SDLK_LEFT:
-                    self.delta_move = -1
-                    self.face_dir = -1
-                    self.is_moving = True
-            elif event.type == SDL_KEYUP:  # 제자리 점프 중간에 방향키가 떼어진 경우
-                if event.key == SDLK_RIGHT:
-                    self.delta_move = -1
-                    self.face_dir = -1
-                    self.is_moving = True
-                elif event.key == SDLK_LEFT:
-                    self.delta_move = 1
-                    self.face_dir = 1
-                    self.is_moving = True
+
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_RIGHT:
+                self.delta_move = 1
+                self.face_dir = 1
+                self.is_moving = True
+            elif event.key == SDLK_LEFT:
+                self.delta_move = -1
+                self.face_dir = -1
+                self.is_moving = True
+
+        elif event.type == SDL_KEYUP:
+            if event.key == SDLK_RIGHT and self.delta_move == 1:
+                self.delta_move = 0
+                self.is_moving = False
+            elif event.key == SDLK_LEFT and self.delta_move == -1:
+                self.delta_move = 0
+                self.is_moving = False
 
     def attack(self):
         print('attack')
