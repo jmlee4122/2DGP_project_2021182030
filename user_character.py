@@ -25,12 +25,11 @@ def a_down(e):
 
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_KMPH = 30.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-# Boy Action Speed
 TIME_PER_ACTION_DEATH = 0.5
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
 FRAMES_PER_ACTION_DEATH = 8
@@ -39,6 +38,10 @@ TIME_PER_ACTION_JUMP = 0.5
 ACTION_PER_TIME_JUMP = 1.0 / TIME_PER_ACTION_JUMP
 FRAMES_PER_ACTION_JUMP = 6
 GRAVITY = 9.8  # 중력 가속도 (m/s²)
+
+TIME_PER_ACTION_RUN = 0.5
+ACTION_PER_TIME_RUN = 1.0 / TIME_PER_ACTION_JUMP
+FRAMES_PER_ACTION_RUN = 6
 
 
 class Death:
@@ -155,7 +158,6 @@ class Run:
         self.clip_width = 402
         self.clip_height = 382
         self.clip_bottom = 0
-        self.frame = 0
 
     def enter(self, e):
         self.uc.frame = 0
@@ -171,18 +173,18 @@ class Run:
         if space_down(e):
             self.uc.attack()
             self.uc.is_attacking = True
+        self.uc.frame = 0
 
     def do(self):
-        self.uc.frame = (self.uc.frame + 1) % 12
-        self.frame = self.uc.frame
-        self.uc.x += self.uc.delta_move * 8
+        self.uc.frame = (self.uc.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME_RUN * game_framework.frame_time) % 6
+        self.uc.x += self.uc.delta_move * RUN_SPEED_PPS * game_framework.frame_time
 
-        if self.uc.face_dir == 1 and self.uc.frame >= 6:
+        if self.uc.face_dir == 1 and int(self.uc.frame) >= 6:
             self.clip_bottom = 1
-            self.frame -= 6
-        elif self.uc.face_dir == -1 and self.uc.frame >= 6:
+            self.uc.frame -= 6
+        elif self.uc.face_dir == -1 and int(self.uc.frame) >= 6:
             self.clip_bottom = 3
-            self.frame -= 6
+            self.uc.frame -= 6
 
     def draw(self):
         if self.uc.is_attacking:
@@ -193,7 +195,7 @@ class Run:
             self.uc.is_attacking = False
         else:
             self.image.clip_draw(
-                self.frame * self.clip_width, self.clip_bottom * self.clip_height,
+                int(self.uc.frame) * self.clip_width, self.clip_bottom * self.clip_height,
                 self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
             )
             delay(0.01)
