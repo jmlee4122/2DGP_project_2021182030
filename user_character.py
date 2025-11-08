@@ -167,6 +167,14 @@ class Run:
         elif left_down(e) or right_up(e):
             self.uc.delta_move = self.uc.face_dir = -1
             self.clip_bottom = 2
+        elif is_randed(e):
+            # INPUT인데 방향 키 정보가 없을 때는 현재 delta_move 기반
+            if self.uc.delta_move > 0:
+                self.uc.face_dir = 1
+                self.clip_bottom = 0
+            elif self.uc.delta_move < 0:
+                self.uc.face_dir = -1
+                self.clip_bottom = 2
 
     def exit(self, e):
         if space_down(e):
