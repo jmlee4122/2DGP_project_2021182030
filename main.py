@@ -1,53 +1,11 @@
 from pico2d import *
 
-import game_world
-from back_ground import BackGround
-from user_character import UserChar
-
-
-def reset_world():
-    global backGround
-    global user_character
-
-    backGround = BackGround()
-    game_world.add_object(backGround, 0)
-
-    user_character = UserChar()
-    game_world.add_object(user_character, 1)
-
-def handle_events():
-    global running
-
-    event_list = get_events()
-    for event in event_list:
-        if event.type == SDL_QUIT:
-            running = False
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
-        else:
-            backGround.handle_event(event)
-            user_character.handle_event(event)
-            pass
-
-
-def update_world():
-    game_world.update()
-
-
-def render_world():
-    clear_canvas()
-    game_world.render()
-    update_canvas()
-
-running = True
+import game_framework
+import play_mode as start_mode
+# import game_world
+# from back_ground import BackGround
+# from user_character import UserChar
 
 open_canvas(1920, 1080)
-reset_world()
-
-while running:
-    handle_events()
-    update_world()
-    render_world()
-    delay(0.02)
-
+game_framework.run(start_mode)
 close_canvas()
