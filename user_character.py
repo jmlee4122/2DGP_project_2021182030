@@ -1,6 +1,7 @@
 from pico2d import load_image, delay
 from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP, SDLK_a, SDLK_SPACE
 
+import game_framework
 import game_world
 from bullet import Bullet
 from state_machine import StateMachine
@@ -22,6 +23,19 @@ def left_up(e):
 def a_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
+
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+# Boy Action Speed
+TIME_PER_ACTION_DEATH = 0.5
+ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
+FRAMES_PER_ACTION_DEATH = 8
+
+
 class Death:
     def __init__(self, user_character):
         self.uc = user_character
@@ -29,31 +43,33 @@ class Death:
         self.image = load_image(file_path + 'user_death_sprite_sheet.png')
         self.clip_width = 402
         self.clip_height = 382
+        self.finished = False
 
     def enter(self, e):
         self.uc.frame = 0
         self.uc.is_jumping = False
         self.uc.is_moving = False
         self.uc.y = 400
+        self.finished = False
 
     def exit(self, e):
         pass
 
     def do(self):
-        if self.uc.frame == 8:
-            self.uc.frame = 7
-        self.uc.frame += 1
-        pass
+        if not self.finished:
+            self.uc.frame = (self.uc.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * game_framework.frame_time) % 8
+            if int(self.uc.frame) == 7:
+                self.finished = True
 
     def draw(self):
         if self.uc.face_dir == 1:
             self.image.clip_draw(
-                (self.uc.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
+                int(self.uc.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
                 self.uc.x, self.uc.y, 300, 300
             )
         else:
             self.image.clip_composite_draw(
-                (self.uc.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
+                int(self.uc.frame - 1) * self.clip_width, 0, self.clip_width, self.clip_height,
                 0, 'h', self.uc.x, self.uc.y, 300, 300
             )
 
