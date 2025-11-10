@@ -82,7 +82,7 @@ class Death:
             )
 
 class Jump:
-    def __init__(self, user_character, init_speed_mps=12.0):
+    def __init__(self, user_character, init_speed_mps=8.0):
         self.uc = user_character
         file_path = '2DGP_character/user_character/'
         self.image = load_image(file_path + 'user_jump_sprite_sheet.png')
