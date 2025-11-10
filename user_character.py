@@ -81,6 +81,38 @@ class Death:
                 0, 'h', self.uc.x, self.uc.y, 300, 300
             )
 
+class DownRun:
+    def __init__(self, user_character):
+        self.uc = user_character
+
+    def enter(self, e):
+        pass
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        pass
+
+    def draw(self):
+        pass
+
+class DownIdle:
+    def __init__(self, user_character):
+        self.uc = user_character
+
+    def enter(self, e):
+        pass
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        pass
+
+    def draw(self):
+        pass
+
 class Run:
     def __init__(self, user_character):
         self.uc = user_character
@@ -195,14 +227,20 @@ class UserChar:
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
+        self.DOWN_RUN = DownRun(self)
+        self.DOWN_IDLE = DownIdle(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {space_down: self.IDLE, a_down: self.DEATH,
+                self.IDLE: {down_down: self.DOWN_IDLE, space_down: self.IDLE, a_down: self.DEATH,
                             right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {space_down: self.RUN, a_down: self.DEATH,
+                self.RUN: {down_down: self.DOWN_RUN, space_down: self.RUN, a_down: self.DEATH,
                            right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
+                self.DOWN_IDLE: {down_up: self.IDLE, right_up: self.DOWN_RUN, left_up: self.DOWN_RUN,
+                                 right_down: self.DOWN_RUN, left_down: self.DOWN_RUN},
+                self.DOWN_RUN: {down_up: self.RUN, right_up: self.DOWN_IDLE, left_up: self.DOWN_IDLE,
+                                 right_down: self.DOWN_IDLE, left_down: self.DOWN_IDLE},
                 self.DEATH: {} # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
