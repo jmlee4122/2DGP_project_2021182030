@@ -139,6 +139,3 @@ class BasicMonster:
 
     def attack(self):
         pass
-
-    def change_face(self):
-        pass
