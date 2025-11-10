@@ -1,17 +1,13 @@
 from pico2d import load_image, delay
-from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_UP, SDLK_a, SDLK_SPACE
+from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_SPACE, SDLK_DOWN
 
 import game_framework
 import game_world
 from bullet import Bullet
 from state_machine import StateMachine
 
-def is_randed(e):
-    return e[0] == 'RANDED'
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
-def upward_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
 def right_up(e):
@@ -22,6 +18,10 @@ def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
 def a_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
+def down_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
+def down_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -81,71 +81,6 @@ class Death:
                 0, 'h', self.uc.x, self.uc.y, 300, 300
             )
 
-class Jump:
-    def __init__(self, user_character, init_speed_mps=8.0):
-        self.uc = user_character
-        file_path = '2DGP_character/user_character/'
-        self.image = load_image(file_path + 'user_jump_sprite_sheet.png')
-        self.clip_width = 546
-        self.clip_height = 490
-        self.init_speed = init_speed_mps  # 초기 상향 속도 (m/s)
-        self.yv = self.init_speed
-        self.ground_y = self.uc.y
-        # 애니메이션 (한 사이클만 재생)
-        self.anim_frame = 0
-        self.anim_timer = 0.0
-        # 기본 프레임 인터벌(예비값) - 실제 값은 enter()에서 계산
-        self.frame_interval = TIME_PER_ACTION_JUMP / FRAMES_PER_ACTION_JUMP
-        self.EPS = 1.0  # 착지 허용 오차(픽셀)
-
-    def enter(self, e):
-        self.uc.frame = 0
-        self.uc.is_jumping = True
-        self.yv = self.init_speed
-        self.ground_y = self.uc.y
-        self.anim_frame = 0
-        self.anim_timer = 0.0
-        flight_time = max(0.01, 2.0 * self.init_speed / GRAVITY)
-        self.frame_interval = flight_time / FRAMES_PER_ACTION_JUMP
-        print('enter Jump')
-
-    def exit(self, e):
-        self.uc.frame = 0
-        self.uc.is_jumping = False
-
-    def do(self):
-        dt = game_framework.frame_time
-        if self.anim_frame < FRAMES_PER_ACTION_JUMP - 1:
-            self.anim_timer += dt
-            while self.anim_timer >= self.frame_interval and self.anim_frame < FRAMES_PER_ACTION_JUMP - 1:
-                self.anim_timer -= self.frame_interval
-                self.anim_frame += 1
-        self.uc.frame = self.anim_frame
-
-        # 수평/수직 물리
-        self.uc.x += self.uc.delta_move * RUN_SPEED_PPS * dt
-        self.uc.y += self.yv * dt * PIXEL_PER_METER
-        self.yv -= GRAVITY * dt
-
-        # 착지 판정
-        if self.ground_y is not None and self.uc.y <= self.ground_y + self.EPS and self.yv <= 0:
-            self.uc.y = self.ground_y
-            self.uc.STATE_MACHINE.handle_state_event(('RANDED', None))
-
-    def draw(self):
-        if self.uc.face_dir == 1:
-            self.image.clip_draw(
-                int(self.uc.frame) * self.clip_width, 0, self.clip_width, self.clip_height,
-                self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
-            )
-        else:
-            self.image.clip_composite_draw(
-                int(self.uc.frame) * self.clip_width, 0, self.clip_width, self.clip_height,
-                0, 'h', self.uc.x, self.uc.y, 300 * (490 / 382), 300 * (490 / 382)
-            )
-
-
-
 class Run:
     def __init__(self, user_character):
         self.uc = user_character
@@ -167,14 +102,6 @@ class Run:
         elif left_down(e) or right_up(e):
             self.uc.delta_move = self.uc.face_dir = -1
             self.clip_bottom = 2
-        elif is_randed(e):
-            # INPUT인데 방향 키 정보가 없을 때는 현재 delta_move 기반
-            if self.uc.delta_move > 0:
-                self.uc.face_dir = 1
-                self.clip_bottom = 0
-            elif self.uc.delta_move < 0:
-                self.uc.face_dir = -1
-                self.clip_bottom = 2
 
     def exit(self, e):
         if space_down(e):
@@ -263,24 +190,19 @@ class UserChar:
         self.face_dir = 1 # 1: right, -1: left
         self.delta_move = 0
         self.is_moving = False
-        self.is_jumping = False
         self.is_attacking = False
 
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
-        self.JUMP = Jump(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {space_down: self.IDLE, a_down: self.DEATH, upward_down: self.JUMP,
+                self.IDLE: {space_down: self.IDLE, a_down: self.DEATH,
                             right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {space_down: self.RUN, a_down: self.DEATH, upward_down: self.JUMP,
+                self.RUN: {space_down: self.RUN, a_down: self.DEATH,
                            right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
-                self.JUMP: {space_down: self.JUMP, a_down: self.DEATH,
-                            (lambda e: is_randed(e) and self.is_moving): self.RUN,
-                            (lambda e: is_randed(e) and not self.is_moving): self.IDLE},
                 self.DEATH: {} # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
@@ -292,33 +214,7 @@ class UserChar:
         self.STATE_MACHINE.draw()
 
     def handle_event(self, event):
-        if self.is_jumping:
-            self.jump_handle_event(event)
-        else:
-            self.STATE_MACHINE.handle_state_event(('INPUT', event))
-
-    def jump_handle_event(self, event):
-        if event.type == SDL_KEYDOWN and event.key == SDLK_a:
-            self.STATE_MACHINE.handle_state_event(('INPUT', event))
-            return
-
-        if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_RIGHT:
-                self.delta_move = 1
-                self.face_dir = 1
-                self.is_moving = True
-            elif event.key == SDLK_LEFT:
-                self.delta_move = -1
-                self.face_dir = -1
-                self.is_moving = True
-
-        elif event.type == SDL_KEYUP:
-            if event.key == SDLK_RIGHT and self.delta_move == 1:
-                self.delta_move = 0
-                self.is_moving = False
-            elif event.key == SDLK_LEFT and self.delta_move == -1:
-                self.delta_move = 0
-                self.is_moving = False
+        self.STATE_MACHINE.handle_state_event(('INPUT', event))
 
     def attack(self):
         print('attack')
