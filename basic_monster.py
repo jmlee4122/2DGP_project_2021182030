@@ -24,36 +24,51 @@ ACTION_PER_TIME_IDLE = 1.0 / TIME_PER_ACTION_IDLE
 FRAMES_PER_ACTION_IDLE = 5
 
 class Death:
-    def __init__(self, user_character):
-        pass
+    def __init__(self, basic_monster):
+        self.basic = basic_monster
+        file_path = '2DGP_character/basic_monster/'
+        self.basic.image = load_image(file_path + 'basic_death_sprite_sheet.png')
+
+        self.frame = 0
+        self.clip_height = 0
 
     def enter(self, e):
-        pass
+        self.basic.frame = 0
+        self.basic.clip_size_x = 402
+        self.basic.clip_size_y = 382
+
+        self.frame = 0
+        self.clip_height = 0
 
     def exit(self, e):
-        pass
+        self.basic.frame = 0
+        self.frame = 0
+        self.clip_height = 0
 
     def do(self):
-        pass
+        self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 10
+        self.frame = int(self.basic.frame)
+        if self.basic.face_dir == 1:
+            if self.frame < 5:
+                self.clip_height = 1
+            else:
+                self.frame -= 5
+                self.clip_height = 0
+        elif self.basic .face_dir == -1:
+            if self.frame < 5:
+                self.clip_height = 3
+            else:
+                self.frame -= 5
+                self.clip_height = 2
+
 
     def draw(self):
-        pass
-
-class Run:
-    def __init__(self, user_character):
-        pass
-
-    def enter(self, e):
-        pass
-
-    def exit(self, e):
-       pass
-
-    def do(self):
-        pass
-
-    def draw(self):
-       pass
+        if self.basic.face_dir == 1:
+            self.basic.image.clip_draw(self.frame * self.basic.clip_size_x, self.clip_height * self.basic.clip_size_y,
+                                       self.basic.clip_size_x, self.basic.clip_size_y, self.basic.x, self.basic.y)
+        elif self.basic.face_dir == -1:
+            self.basic.image.clip_draw(self.frame * self.basic.clip_size_x, self.clip_height * self.basic.clip_size_y,
+                                       self.basic.clip_size_x, self.basic.clip_size_y, self.basic.x, self.basic.y)
 
 class Idle:
     def __init__(self, basic_monster):
@@ -102,13 +117,11 @@ class BasicMonster:
         self.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
 
         self.IDLE = Idle(self)
-        self.RUN = Run(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
-            self.IDLE,  # 시작상태
+            self.DEATH,  # 시작상태
             {  # 룰
                 self.IDLE: {},
-                self.RUN: {},
                 self.DEATH: {}  # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
