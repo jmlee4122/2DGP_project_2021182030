@@ -88,6 +88,7 @@ class DownRun:
         self.image = load_image(file_path + 'user_r_down.png')
 
     def enter(self, e):
+        self.uc.is_down = True
         if down_down(e): # run -> down run
             pass
         else: # down idle -> down run
@@ -102,7 +103,7 @@ class DownRun:
             self.image = load_image(file_path + 'user_l_down.png')
 
     def exit(self, e):
-        pass
+        self.uc.is_down = False
 
     def do(self):
         pass
@@ -117,6 +118,7 @@ class DownIdle:
         self.image = load_image(file_path + 'user_r_down.png')
 
     def enter(self, e):
+        self.uc.is_down = True
         self.uc.delta_move = 0
         file_path = '2DGP_character/user_character/'
         if self.uc.face_dir == 1:
@@ -125,7 +127,7 @@ class DownIdle:
             self.image = load_image(file_path + 'user_l_down.png')
 
     def exit(self, e):
-        pass
+        self.uc.is_down = False
 
     def do(self):
         pass
@@ -226,7 +228,7 @@ class Idle:
                 self.attack_image_R.draw(self.uc.x, self.uc.y, 300, 300)
                 self.attack_image_effect.draw(self.uc.x + effect_loc_x, self.uc.y + effect_loc_y, 80, 80)
             else:
-                self.attack_image_L.draw(self.uc.x, self.uc.y, 300, 300)
+                self.attack_image_R.composite_draw(0, 'h', self.uc.x, self.uc.y, 300, 300)
                 self.attack_image_effect.draw(self.uc.x + effect_loc_x, self.uc.y + effect_loc_y, 80, 80)
             self.uc.is_attacking = False
         else:
@@ -236,9 +238,9 @@ class Idle:
                     self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
                 )
             else:  # face_dir == -1: # left
-                self.image.clip_draw(
-                    0 * self.clip_width, self.clip_bottom * self.clip_height,
-                    self.clip_width, self.clip_height, self.uc.x, self.uc.y, 300, 300
+                self.image.clip_composite_draw(
+                    3 * self.clip_width, self.clip_bottom * self.clip_height,
+                    self.clip_width, self.clip_height, 0, 'h', self.uc.x, self.uc.y, 300, 300
                 )
 
 
@@ -250,7 +252,7 @@ class UserChar:
         self.delta_move = 0
         self.is_moving = False
         self.is_attacking = False
-
+        self.is_down = False
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -290,4 +292,7 @@ class UserChar:
         game_world.add_object(bullet, 1)
 
     def get_bb(self):
-        return self.x - 40, self.y - 100, self.x + 40, self.y + 100
+        if self.is_down:
+            return self.x - 90, self.y - 140, self.x + 90, self.y - 50
+        else:
+            return self.x - 40, self.y - 100, self.x + 40, self.y + 100
