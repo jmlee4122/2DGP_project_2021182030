@@ -19,12 +19,15 @@ class Fire:
     def __init__(self, x, y, velocity):
         if not Fire.image:
             file_path = '2DGP_attack/'
-            self.image = load_image(file_path + 'basic_fire.png')
+            Fire.image = load_image(file_path + 'basic_fire.png')
         self.x, self.y, self.velocity = x, y, velocity
         self.range, self.dis = 700, 0
 
     def draw(self):
-        self.image.draw(self.x, self.y, 200, 200)
+        if self.velocity < 0:
+            Fire.image.draw(self.x, self.y, 200, 200)
+        else:
+            Fire.image.composite_draw(0, 'h', self.x, self.y, 200, 200)
 
     def update(self):
         self.x = self.x + self.velocity
