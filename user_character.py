@@ -100,9 +100,15 @@ class DownRun:
 class DownIdle:
     def __init__(self, user_character):
         self.uc = user_character
+        file_path = '2DGP_character/user_character/'
+        self.image = load_image(file_path + 'user_r_down.png')
 
     def enter(self, e):
-        pass
+        file_path = '2DGP_character/user_character/'
+        if self.uc.face_dir == 1:
+            self.image = load_image(file_path + 'user_r_down.png')
+        else:
+            self.image = load_image(file_path + 'user_l_down.png')
 
     def exit(self, e):
         pass
@@ -111,7 +117,7 @@ class DownIdle:
         pass
 
     def draw(self):
-        pass
+        self.image.draw(self.uc.x, self.uc.y)
 
 class Run:
     def __init__(self, user_character):
