@@ -2,6 +2,7 @@ from pico2d import *
 
 import game_world
 from back_ground import BackGround
+from basic_monster import BasicMonster
 from user_character import UserChar
 import game_framework
 
@@ -25,6 +26,9 @@ def init():
 
     back_ground = BackGround()
     game_world.add_object(back_ground, 0)
+
+    basic_monster = BasicMonster()
+    game_world.add_object(basic_monster, 1)
 
 def update():
     game_world.update()

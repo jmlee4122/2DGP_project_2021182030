@@ -15,15 +15,13 @@ TIME_PER_ACTION_DEATH = 0.3
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
 FRAMES_PER_ACTION_DEATH = 8
 
-TIME_PER_ACTION_JUMP = 0.3
-ACTION_PER_TIME_JUMP = 1.0 / TIME_PER_ACTION_JUMP
-FRAMES_PER_ACTION_JUMP = 6
-GRAVITY = 9.8  # 중력 가속도 (m/s²)
-
 TIME_PER_ACTION_RUN = 0.3
-ACTION_PER_TIME_RUN = 1.0 / TIME_PER_ACTION_JUMP
+ACTION_PER_TIME_RUN = 1.0 / TIME_PER_ACTION_RUN
 FRAMES_PER_ACTION_RUN = 6
 
+TIME_PER_ACTION_IDLE = 0.3
+ACTION_PER_TIME_IDLE = 1.0 / TIME_PER_ACTION_IDLE
+FRAMES_PER_ACTION_IDLE = 5
 
 class Death:
     def __init__(self, user_character):
@@ -58,28 +56,44 @@ class Run:
        pass
 
 class Idle:
-    def __init__(self, user_character):
-        pass
+    def __init__(self, basic_monster):
+        self.basic = basic_monster
+        file_path = '2DGP_character/basic_moster/'
+        self.basic.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
 
     def enter(self, e):
-       pass
+        self.basic.frame = 0
+        self.basic.clip_size_x = 402
+        self.basic.clip_size_y = 382
 
     def exit(self, e):
-       pass
+        self.basic.frame = 0
 
     def do(self):
-        pass
+        self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 5
 
     def draw(self):
-        pass
+        if self.basic.face_dir == 1:
+            self.basic.image.clip_draw(int(self.basic.frame) * self.basic.clip_size_x, 0 * self.basic.clip_size_y,
+                                       self.basic.clip_size_x, self.basic.clip_size_y, self.basic.x, self.basic.y)
+        elif self.basic.face_dir == -1:
+            self.basic.image.clip_draw(int(self.basic.frame) * self.basic.clip_size_x, 1 * self.basic.clip_size_y,
+                                       self.basic.clip_size_x, self.basic.clip_size_y, self.basic.x, self.basic.y)
 
 
 class BasicMonster:
     def __init__(self):
         self.x = 1300
         self.y = 400
-        self.face_dir = 1 # 1: right, -1: left
+        self.face_dir = -1 # 1: right, -1: left
         self.delta_move = 0
+        self.frame = 0
+
+        self.clip_size_x = 0
+        self.clip_size_y = 0
+
+        file_path = '2DGP_character/basic_moster/'
+        self.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
