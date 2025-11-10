@@ -43,6 +43,8 @@ class Death:
     def do(self):
         self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 10
         self.frame = int(self.basic.frame)
+        if self.frame >= 9:
+            self.basic.is_dead = True
         if self.basic.face_dir == 1:
             if self.frame < 5:
                 self.clip_height = 1
@@ -117,11 +119,12 @@ class BasicMonster:
         self.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
 
         self.user = user_char
+        self.is_dead = False
 
         self.IDLE = Idle(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
-            self.IDLE,  # 시작상태
+            self.DEATH,  # 시작상태
             {  # 룰
                 self.IDLE: {},
                 self.DEATH: {}  # 죽음 상태에서는 아무 이벤트도 처리하지 않음
@@ -129,6 +132,8 @@ class BasicMonster:
         )
 
     def update(self):
+        if self.is_dead:
+            game_world.remove_object(self)
         self.STATE_MACHINE.update()
 
     def draw(self):

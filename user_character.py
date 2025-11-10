@@ -266,6 +266,7 @@ class UserChar:
         self.is_jumping = False
         self.is_attacking = False
 
+
         self.IDLE = Idle(self)
         self.RUN = Run(self)
         self.JUMP = Jump(self)
