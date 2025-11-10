@@ -19,7 +19,7 @@ TIME_PER_ACTION_RUN = 0.3
 ACTION_PER_TIME_RUN = 1.0 / TIME_PER_ACTION_RUN
 FRAMES_PER_ACTION_RUN = 6
 
-TIME_PER_ACTION_IDLE = 0.3
+TIME_PER_ACTION_IDLE = 1.0
 ACTION_PER_TIME_IDLE = 1.0 / TIME_PER_ACTION_IDLE
 FRAMES_PER_ACTION_IDLE = 5
 
@@ -74,17 +74,23 @@ class Idle:
 
     def draw(self):
         if self.basic.face_dir == 1:
-            self.basic.image.clip_draw(int(self.basic.frame) * self.basic.clip_size_x, 0 * self.basic.clip_size_y,
-                                       self.basic.clip_size_x, self.basic.clip_size_y, self.basic.x, self.basic.y)
+            self.basic.image.clip_draw(0, 0 * self.basic.clip_size_y, self.basic.clip_size_x, self.basic.clip_size_y,
+                                       self.basic.x, self.basic.y)
         elif self.basic.face_dir == -1:
-            self.basic.image.clip_draw(int(self.basic.frame) * self.basic.clip_size_x, 1 * self.basic.clip_size_y,
-                                       self.basic.clip_size_x, self.basic.clip_size_y, self.basic.x, self.basic.y)
+            self.basic.image.clip_draw(0, 1 * self.basic.clip_size_y, self.basic.clip_size_x, self.basic.clip_size_y,
+                                       self.basic.x, self.basic.y)
+        # if self.basic.face_dir == 1:
+        #     self.basic.image.clip_draw(int(self.basic.frame) * self.basic.clip_size_x, 0 * self.basic.clip_size_y,
+        #                                self.basic.clip_size_x, self.basic.clip_size_y, self.basic.x, self.basic.y)
+        # elif self.basic.face_dir == -1:
+        #     self.basic.image.clip_draw(int(self.basic.frame) * self.basic.clip_size_x, 1 * self.basic.clip_size_y,
+        #                                self.basic.clip_size_x, self.basic.clip_size_y, self.basic.x, self.basic.y)
 
 
 class BasicMonster:
     def __init__(self):
         self.x = 1300
-        self.y = 400
+        self.y = 420
         self.face_dir = -1 # 1: right, -1: left
         self.delta_move = 0
         self.frame = 0
