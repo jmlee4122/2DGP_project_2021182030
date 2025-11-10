@@ -21,7 +21,7 @@ class Fire:
             file_path = '2DGP_attack/'
             self.image = load_image(file_path + 'basic_fire.png')
         self.x, self.y, self.velocity = x, y, velocity
-        self.range, self.dis = 500, 0
+        self.range, self.dis = 700, 0
 
     def draw(self):
         self.image.draw(self.x, self.y, 200, 200)
