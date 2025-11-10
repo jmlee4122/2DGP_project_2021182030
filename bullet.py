@@ -6,12 +6,15 @@ class Bullet:
     def __init__(self, x, y, velocity):
         if not Bullet.image:
             file_path = '2DGP_attack/'
-            self.image = load_image(file_path + 'uc_bullet.png')
+            Bullet.image = load_image(file_path + 'uc_bullet.png')
         self.x, self.y, self.velocity = x, y, velocity
         self.range, self.dis = 500, 0
 
     def draw(self):
-        self.image.draw(self.x, self.y, 24, 14)
+        if self.velocity > 0:
+            Bullet.image.draw(self.x, self.y, 24, 14)
+        else:
+            Bullet.image.composite_draw(0, 'h', self.x, self.y, 24, 14)
 
 
     def update(self):
