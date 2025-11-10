@@ -9,6 +9,7 @@ import game_framework
 
 user_char = None
 back_ground = None
+basic_monster = None
 
 def handle_events():
     event_list = get_events()
@@ -20,10 +21,12 @@ def handle_events():
         else:
             user_char.handle_event(event)
             back_ground.handle_event(event)
+            basic_monster.handle_event(event)
 
 def init():
     global user_char
     global back_ground
+    global basic_monster
 
     user_char = UserChar()
     game_world.add_object(user_char, 1)

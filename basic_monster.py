@@ -1,9 +1,13 @@
-from pico2d import load_image, delay
+from pico2d import load_image
+from sdl2 import SDLK_b, SDL_KEYDOWN
 
 import game_framework
 import game_world
+from fire import Fire
 from state_machine import StateMachine
 
+def b_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_b
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 30.0  # Km / Hour
@@ -79,7 +83,9 @@ class Idle:
         self.basic.clip_size_y = 382
 
     def exit(self, e):
-        pass
+        if b_down(e):
+            self.basic.attack()
+            self.basic.is_attacking = True
 
     def do(self):
         self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 5
@@ -124,9 +130,9 @@ class BasicMonster:
         self.IDLE = Idle(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
-            self.DEATH,  # 시작상태
+            self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {},
+                self.IDLE: {b_down: self.IDLE},
                 self.DEATH: {}  # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
@@ -143,4 +149,7 @@ class BasicMonster:
         self.STATE_MACHINE.handle_state_event(('INPUT', event))
 
     def attack(self):
-        pass
+        loc_x = 55 * self.face_dir
+        loc_y = 20
+        fire = Fire(self.x + loc_x, self.y + loc_y)
+        game_world.add_object(fire, 1)
