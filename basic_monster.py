@@ -149,7 +149,7 @@ class BasicMonster:
         self.STATE_MACHINE.handle_state_event(('INPUT', event))
 
     def attack(self):
-        loc_x = 55 * self.face_dir
+        loc_x = 180 * self.face_dir
         loc_y = 20
-        fire = Fire(self.x + loc_x, self.y + loc_y)
+        fire = Fire(self.x + loc_x, self.y + loc_y, self.face_dir * 3)
         game_world.add_object(fire, 1)

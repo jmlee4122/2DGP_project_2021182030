@@ -15,18 +15,19 @@ FRAMES_PER_ACTION = 9
 
 class Fire:
     image = None
-    def __init__(self, x, y):
+
+    def __init__(self, x, y, velocity):
         if not Fire.image:
             file_path = '2DGP_attack/'
-            self.image = load_image(file_path + 'basic_L.png')
-        self.x, self.y = x, y
-        self.frame = 0
+            self.image = load_image(file_path + 'basic_fire.png')
+        self.x, self.y, self.velocity = x, y, velocity
+        self.range, self.dis = 500, 0
 
     def draw(self):
-        self.image.clip_draw(int(self.frame) * 300, 0, 300, 300, self.x, self.y)
-
+        self.image.draw(self.x, self.y, 200, 200)
 
     def update(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 9
-        if self.frame >= 8:
+        self.x = self.x + self.velocity
+        self.dis = self.dis + self.velocity
+        if self.dis > self.range or self.dis < -self.range:
             game_world.remove_object(self)
