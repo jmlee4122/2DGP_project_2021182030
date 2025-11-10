@@ -58,7 +58,7 @@ class Run:
 class Idle:
     def __init__(self, basic_monster):
         self.basic = basic_monster
-        file_path = '2DGP_character/basic_moster/'
+        file_path = '2DGP_character/basic_monster/'
         self.basic.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
 
     def enter(self, e):
@@ -92,7 +92,7 @@ class BasicMonster:
         self.clip_size_x = 0
         self.clip_size_y = 0
 
-        file_path = '2DGP_character/basic_moster/'
+        file_path = '2DGP_character/basic_monster/'
         self.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
 
         self.IDLE = Idle(self)
