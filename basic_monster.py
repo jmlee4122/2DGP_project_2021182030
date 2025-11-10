@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, draw_rectangle
 from sdl2 import SDLK_b, SDL_KEYDOWN
 
 import game_framework
@@ -141,6 +141,7 @@ class BasicMonster:
 
     def draw(self):
         self.STATE_MACHINE.draw()
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         self.STATE_MACHINE.handle_state_event(('INPUT', event))
@@ -150,3 +151,6 @@ class BasicMonster:
         loc_y = 20
         fire = Fire(self.x + loc_x, self.y + loc_y, self.face_dir * 3)
         game_world.add_object(fire, 1)
+
+    def get_bb(self):
+        return self.x - 30, self.y - 150, self.x + 30, self.y + 150

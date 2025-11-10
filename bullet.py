@@ -15,6 +15,7 @@ class Bullet:
             Bullet.image.draw(self.x, self.y, 24, 14)
         else:
             Bullet.image.composite_draw(0, 'h', self.x, self.y, 24, 14)
+        draw_rectangle(*self.get_bb())
 
 
     def update(self):
@@ -22,3 +23,6 @@ class Bullet:
         self.dis = self.dis + self.velocity
         if self.dis > self.range or self.dis < -self.range:
             game_world.remove_object(self)
+
+    def get_bb(self):
+        return self.x - 10, self.y - 5, self.x + 10, self.y + 5

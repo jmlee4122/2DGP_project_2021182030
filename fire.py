@@ -28,9 +28,13 @@ class Fire:
             Fire.image.draw(self.x, self.y, 200, 200)
         else:
             Fire.image.composite_draw(0, 'h', self.x, self.y, 200, 200)
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x = self.x + self.velocity
         self.dis = self.dis + self.velocity
         if self.dis > self.range or self.dis < -self.range:
             game_world.remove_object(self)
+
+    def get_bb(self):
+        return self.x - 40, self.y - 20, self.x + 40, self.y + 20

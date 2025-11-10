@@ -1,4 +1,4 @@
-from pico2d import load_image, delay
+from pico2d import load_image, draw_rectangle
 from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_SPACE, SDLK_DOWN
 
 import game_framework
@@ -277,6 +277,7 @@ class UserChar:
 
     def draw(self):
         self.STATE_MACHINE.draw()
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         self.STATE_MACHINE.handle_state_event(('INPUT', event))
@@ -287,3 +288,6 @@ class UserChar:
         loc_y = 20
         bullet = Bullet(self.x + loc_x, self.y + loc_y, self.face_dir * 20)
         game_world.add_object(bullet, 1)
+
+    def get_bb(self):
+        return self.x - 40, self.y - 100, self.x + 40, self.y + 100
