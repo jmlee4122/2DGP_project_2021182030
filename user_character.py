@@ -88,6 +88,13 @@ class DownRun:
         self.image = load_image(file_path + 'user_r_down.png')
 
     def enter(self, e):
+        if down_down(e): # run -> down run
+            pass
+        else: # down idle -> down run
+            if right_down(e) or left_up(e):
+                self.uc.delta_move = self.uc.face_dir = 1
+            elif left_down(e) or right_up(e):
+                self.uc.delta_move = self.uc.face_dir = -1
         file_path = '2DGP_character/user_character/'
         if self.uc.face_dir == 1:
             self.image = load_image(file_path + 'user_r_down.png')
@@ -110,6 +117,7 @@ class DownIdle:
         self.image = load_image(file_path + 'user_r_down.png')
 
     def enter(self, e):
+        self.uc.delta_move = 0
         file_path = '2DGP_character/user_character/'
         if self.uc.face_dir == 1:
             self.image = load_image(file_path + 'user_r_down.png')
@@ -140,12 +148,19 @@ class Run:
     def enter(self, e):
         self.uc.frame = 0
         self.uc.is_moving = True
-        if right_down(e) or left_up(e):
-            self.uc.delta_move = self.uc.face_dir = 1
-            self.clip_bottom = 0
-        elif left_down(e) or right_up(e):
-            self.uc.delta_move = self.uc.face_dir = -1
-            self.clip_bottom = 2
+
+        if down_up(e):
+            if self.uc.face_dir == 1:
+                self.clip_bottom = 0
+            elif self.uc.face_dir == -1:
+                self.clip_bottom = 2
+        else:
+            if right_down(e) or left_up(e):
+                self.uc.delta_move = self.uc.face_dir = 1
+                self.clip_bottom = 0
+            elif left_down(e) or right_up(e):
+                self.uc.delta_move = self.uc.face_dir = -1
+                self.clip_bottom = 2
 
     def exit(self, e):
         if space_down(e):
