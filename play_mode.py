@@ -31,7 +31,7 @@ def init():
     back_ground = BackGround()
     game_world.add_object(back_ground, 0)
 
-    basic_monster = BasicMonster()
+    basic_monster = BasicMonster(user_char)
     game_world.add_object(basic_monster, 1)
 
 def update():

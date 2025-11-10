@@ -77,10 +77,15 @@ class Idle:
         self.basic.clip_size_y = 382
 
     def exit(self, e):
-        self.basic.frame = 0
+        pass
 
     def do(self):
         self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 5
+        self.basic.frame = 0
+        if self.basic.user.x < self.basic.x:
+            self.basic.face_dir = -1
+        else:
+            self.basic.face_dir = 1
 
     def draw(self):
         if self.basic.face_dir == 1:
@@ -98,7 +103,7 @@ class Idle:
 
 
 class BasicMonster:
-    def __init__(self):
+    def __init__(self, user_char = None):
         self.x = 1300
         self.y = 420
         self.face_dir = -1 # 1: right, -1: left
@@ -111,6 +116,8 @@ class BasicMonster:
         file_path = '2DGP_character/basic_monster/'
         self.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
 
+        self.user = user_char
+
         self.IDLE = Idle(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
@@ -120,6 +127,7 @@ class BasicMonster:
                 self.DEATH: {}  # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
+
     def update(self):
         self.STATE_MACHINE.update()
 
