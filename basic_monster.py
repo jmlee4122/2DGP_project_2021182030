@@ -15,10 +15,6 @@ TIME_PER_ACTION_DEATH = 0.3
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
 FRAMES_PER_ACTION_DEATH = 8
 
-TIME_PER_ACTION_RUN = 0.3
-ACTION_PER_TIME_RUN = 1.0 / TIME_PER_ACTION_RUN
-FRAMES_PER_ACTION_RUN = 6
-
 TIME_PER_ACTION_IDLE = 1.0
 ACTION_PER_TIME_IDLE = 1.0 / TIME_PER_ACTION_IDLE
 FRAMES_PER_ACTION_IDLE = 5
@@ -26,13 +22,12 @@ FRAMES_PER_ACTION_IDLE = 5
 class Death:
     def __init__(self, basic_monster):
         self.basic = basic_monster
-        file_path = '2DGP_character/basic_monster/'
-        self.basic.image = load_image(file_path + 'basic_death_sprite_sheet.png')
-
         self.frame = 0
         self.clip_height = 0
 
     def enter(self, e):
+        file_path = '2DGP_character/basic_monster/'
+        self.basic.image = load_image(file_path + 'basic_death_sprite_sheet.png')
         self.basic.frame = 0
         self.basic.clip_size_x = 402
         self.basic.clip_size_y = 382
@@ -73,10 +68,10 @@ class Death:
 class Idle:
     def __init__(self, basic_monster):
         self.basic = basic_monster
-        file_path = '2DGP_character/basic_monster/'
-        self.basic.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
 
     def enter(self, e):
+        file_path = '2DGP_character/basic_monster/'
+        self.basic.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
         self.basic.frame = 0
         self.basic.clip_size_x = 402
         self.basic.clip_size_y = 382
@@ -119,7 +114,7 @@ class BasicMonster:
         self.IDLE = Idle(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
-            self.DEATH,  # 시작상태
+            self.IDLE,  # 시작상태
             {  # 룰
                 self.IDLE: {},
                 self.DEATH: {}  # 죽음 상태에서는 아무 이벤트도 처리하지 않음
@@ -135,4 +130,7 @@ class BasicMonster:
         self.STATE_MACHINE.handle_state_event(('INPUT', event))
 
     def attack(self):
+        pass
+
+    def change_face(self):
         pass

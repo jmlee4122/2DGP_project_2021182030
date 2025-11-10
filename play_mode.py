@@ -1,5 +1,6 @@
 from pico2d import *
 
+
 import game_world
 from back_ground import BackGround
 from basic_monster import BasicMonster
@@ -7,6 +8,7 @@ from user_character import UserChar
 import game_framework
 
 user_char = None
+back_ground = None
 
 def handle_events():
     event_list = get_events()
@@ -17,9 +19,11 @@ def handle_events():
             game_framework.quit()
         else:
             user_char.handle_event(event)
+            back_ground.handle_event(event)
 
 def init():
     global user_char
+    global back_ground
 
     user_char = UserChar()
     game_world.add_object(user_char, 1)
