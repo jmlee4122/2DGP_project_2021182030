@@ -9,10 +9,6 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-TIME_PER_ACTION = 0.3
-ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 9
-
 class Fire:
     image = None
 
@@ -31,9 +27,10 @@ class Fire:
         draw_rectangle(*self.get_bb())
 
     def update(self):
-        self.x = self.x + self.velocity
-        self.dis = self.dis + self.velocity
-        if self.dis > self.range or self.dis < -self.range:
+        dx = self.velocity * game_framework.frame_time * PIXEL_PER_METER
+        self.x += dx
+        self.dis += abs(dx)
+        if self.dis > self.range:
             game_world.remove_object(self)
 
     def get_bb(self):
