@@ -1,14 +1,11 @@
 from pico2d import load_image, get_time, draw_rectangle
-from sdl2 import SDLK_b, SDL_KEYDOWN
 
 import game_framework
 import game_world
 from fire import Fire
 from state_machine import StateMachine
 
-def b_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_b
-time_out = lambda e: e[0] == 'TIMEOUT'
+# time_out = lambda e: e[0] == 'TIMEOUT'
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 30.0  # Km / Hour
@@ -85,8 +82,7 @@ class Idle:
         self.basic.wait_time = get_time()
 
     def exit(self, e):
-        if e and e[0] == 'TIMEOUT':
-            self.basic.attack()
+        pass
 
     def do(self):
         self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 5
@@ -96,7 +92,9 @@ class Idle:
         else:
             self.basic.face_dir = 1
         if get_time() - self.basic.wait_time > 3:
-            self.basic.STATE_MACHINE.handle_state_event(('TIMEOUT', None))
+            self.basic.attack()
+            self.basic.wait_time = get_time()
+            # self.basic.STATE_MACHINE.handle_state_event(('TIMEOUT', None))
 
     def draw(self):
         if self.basic.face_dir == 1:
@@ -129,7 +127,7 @@ class BasicMonster:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {time_out: self.IDLE},
+                self.IDLE: {},
                 self.DEATH: {}  # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
