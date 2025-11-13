@@ -107,10 +107,10 @@ class Idle:
 
 
 class BasicMonster:
-    def __init__(self, user_char = None):
+    def __init__(self, x, y, user_char = None):
         self.hp = 100
-        self.x = 1300
-        self.y = 420
+        self.x = x
+        self.y = y
         self.face_dir = -1 # 1: right, -1: left
         self.delta_move = 0
         self.frame = 0

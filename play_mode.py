@@ -28,13 +28,13 @@ def init():
     global back_ground
     global basic_monster
 
-    user_char = UserChar()
+    user_char = UserChar(960, 400)
     game_world.add_object(user_char, 1)
 
     back_ground = BackGround()
     game_world.add_object(back_ground, 0)
 
-    basic_monster = BasicMonster(user_char)
+    basic_monster = BasicMonster(1300, 400, user_char)
     game_world.add_object(basic_monster, 1)
 
     game_world.add_collision_pair('uc:fire', user_char, None)

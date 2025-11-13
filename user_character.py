@@ -240,9 +240,9 @@ class Idle:
 
 
 class UserChar:
-    def __init__(self):
+    def __init__(self, x, y):
         self.hp = 100
-        self.x, self.y = 960, 400
+        self.x, self.y = x, y
         self.frame = 0
         self.face_dir = 1 # 1: right, -1: left
         self.delta_move = 0
