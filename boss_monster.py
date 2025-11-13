@@ -18,7 +18,7 @@ TIME_PER_ACTION_DEATH = 1.0
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
 FRAMES_PER_ACTION_DEATH = 8
 
-TIME_PER_ACTION_IDLE = 3.0
+TIME_PER_ACTION_IDLE = 1.5
 ACTION_PER_TIME_IDLE = 1.0 / TIME_PER_ACTION_IDLE
 FRAMES_PER_ACTION_IDLE = 5
 
@@ -29,8 +29,8 @@ class Death:
         self.clip_height = 0
 
     def enter(self, e):
-        file_path = '2DGP_character/basic_monster/'
-        self.boss.image = load_image(file_path + 'basic_death_sprite_sheet.png')
+        file_path = '2DGP_character/boss_monster/'
+        self.boss.image = load_image(file_path + 'boss_death_sprite_sheet.png')
         self.boss.frame = 0
         self.boss.clip_size_x = 402
         self.boss.clip_size_y = 382
@@ -75,8 +75,8 @@ class Idle:
         self.boss = boss_monster
 
     def enter(self, e):
-        file_path = '2DGP_character/basic_monster/'
-        self.boss.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
+        file_path = '2DGP_character/boss_monster/'
+        self.boss.image = load_image(file_path + 'boss_idle_sprite_sheet.png')
         self.boss.clip_size_x = 402
         self.boss.clip_size_y = 382
         self.boss.wait_time = get_time()
@@ -117,8 +117,8 @@ class BossMonster:
         self.clip_size_x = 0
         self.clip_size_y = 0
 
-        file_path = '2DGP_character/basic_monster/'
-        self.image = load_image(file_path + 'basic_idle_sprite_sheet.png')
+        file_path = '2DGP_character/boss_monster/'
+        self.image = load_image(file_path + 'boss_idle_sprite_sheet.png')
 
         self.user = user_char
         self.is_dead = False
