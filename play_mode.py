@@ -14,6 +14,8 @@ back_ground = None
 basic_monster = None
 last_stage = None
 
+saved_user_char = None
+
 def handle_events():
     event_list = get_events()
     for event in event_list:
@@ -31,6 +33,8 @@ def init():
     global back_ground
     global basic_monster
     global last_stage
+
+    global saved_user_char
 
     game_world.enemies.clear()
     game_world.collision_pairs.clear()
@@ -62,7 +66,12 @@ def init():
         uc_x = 300
         uc_y = 400
 
-    user_char = UserChar(uc_x, uc_y)
+    if saved_user_char == None:
+        user_char = UserChar(uc_x, uc_y)
+    else:
+        user_char = saved_user_char
+        user_char.x = uc_x
+        user_char.y = uc_y
     game_world.add_object(user_char, 1)
 
     basic_monsters = [BasicMonster(basic_x[i], basic_y, user_char) for i in range(basic_num)]
@@ -80,12 +89,15 @@ def init():
 
 def update():
     global last_stage
+    global user_char
+    global saved_user_char
 
     game_world.update()
     game_world.handle_collisions()
 
     if back_ground:
         if last_stage != back_ground.stage_num:
+            saved_user_char = user_char
             finish()
             init()
 
