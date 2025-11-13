@@ -71,6 +71,8 @@ class Death:
             self.uc.frame = (self.uc.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * game_framework.frame_time) % 8
             if int(self.uc.frame) == 7:
                 self.finished = True
+        else:
+            self.uc.is_dead = True
 
     def draw(self):
         if self.uc.face_dir == 1:
@@ -247,6 +249,7 @@ class UserChar:
         self.is_moving = False
         self.is_attacking = False
         self.is_down = False
+        self.is_dead = False
 
         self.font = load_font('ENCR10B.TTF', 16)
 
@@ -274,6 +277,8 @@ class UserChar:
         )
 
     def update(self):
+        if self.is_dead:
+            game_world.remove_object(self)
         self.STATE_MACHINE.update()
 
     def draw(self):
