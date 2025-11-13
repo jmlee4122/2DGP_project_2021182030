@@ -1,4 +1,5 @@
 from pico2d import load_image, get_time, draw_rectangle, load_font
+from sdl2 import SDLK_a, SDL_KEYDOWN
 
 import game_framework
 import game_world
@@ -7,6 +8,8 @@ from state_machine import StateMachine
 
 def hp_depleted(e):
     return e[0] == 'HP' and e[1] == 'DEATH'
+def a_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 30.0  # Km / Hour
@@ -16,7 +19,7 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 TIME_PER_ACTION_DEATH = 1.0
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
-FRAMES_PER_ACTION_DEATH = 8
+FRAMES_PER_ACTION_DEATH = 10
 
 TIME_PER_ACTION_IDLE = 1.5
 ACTION_PER_TIME_IDLE = 1.0 / TIME_PER_ACTION_IDLE
@@ -77,8 +80,8 @@ class Idle:
     def enter(self, e):
         file_path = '2DGP_character/boss_monster/'
         self.boss.image = load_image(file_path + 'boss_idle_sprite_sheet.png')
-        self.boss.clip_size_x = 402
-        self.boss.clip_size_y = 382
+        self.boss.clip_size_x = 382
+        self.boss.clip_size_y = 402
         self.boss.wait_time = get_time()
 
     def exit(self, e):
@@ -105,7 +108,7 @@ class Idle:
 
 class BossMonster:
     def __init__(self, x, y, user_char = None):
-        self.hp = 100
+        self.hp = 300
         self.x = x
         self.y = y
         self.face_dir = -1 # 1: right, -1: left
@@ -128,7 +131,7 @@ class BossMonster:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {hp_depleted: self.DEATH},
+                self.IDLE: {hp_depleted: self.DEATH, a_down: self.DEATH},
                 self.DEATH: {}  # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
@@ -157,7 +160,7 @@ class BossMonster:
         #game_world.add_collision_pair('uc:fire', None, fire)
 
     def get_bb(self):
-        return self.x - 80, self.y - 140, self.x + 50, self.y + 180
+        return self.x - 40, self.y - 140, self.x + 60, self.y + 160
 
     # def handle_collision(self, group, other):
     #     if group == 'basic:bullet':
