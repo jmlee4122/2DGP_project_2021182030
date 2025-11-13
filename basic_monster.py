@@ -139,6 +139,9 @@ class BasicMonster:
     def update(self):
         if self.is_dead:
             game_world.remove_object(self)
+            game_world.enemies.remove(self)
+            if game_world.is_need_stage_switch():
+                game_world.stage_switch_requested = True
         self.STATE_MACHINE.update()
 
     def draw(self):

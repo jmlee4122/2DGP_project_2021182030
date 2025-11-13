@@ -1,4 +1,6 @@
 world = [[], []]
+enemies = set()
+stage_switch_requested = False
 
 def add_object(o, depth):
     world[depth].append(o)
@@ -65,3 +67,8 @@ def handle_collisions():
                 if collide(a, b):
                     a.handle_collision(group, b)
                     b.handle_collision(group, a)
+
+def is_need_stage_switch():
+    if not enemies:
+        return True
+    return False

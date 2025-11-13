@@ -1,10 +1,15 @@
 from pico2d import load_image
 
+import game_world
+from game_world import enemies
 from state_machine import StateMachine
-from sdl2 import SDL_KEYDOWN, SDLK_z
 
-def z_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_z
+def switch_to_stage01(e):
+    return e[0] == 'NEXT' and e[1] == 'STAGE01'
+def switch_to_stage02(e):
+    return e[0] == 'NEXT' and e[1] == 'STAGE02'
+def switch_to_stage03(e):
+    return e[0] == 'NEXT' and e[1] == 'STAGE03'
 
 class Stage01:
     def __init__(self, back_ground):
@@ -21,9 +26,11 @@ class Stage01:
         self.fence = load_image(file_path + 'bg_fence.png')
 
     def do(self):
-        pass
+        if self.back_ground.need_switch:
+            self.back_ground.STATE_MACHINE.handle_state_event(('NEXT', 'STAGE02'))
 
     def enter(self, e):
+        self.back_ground.need_switch = False
         print("enter Stage01")
 
     def exit(self, e):
@@ -53,9 +60,11 @@ class Stage02:
         self.fence = load_image(file_path + 'bg_fence.png')
 
     def do(self):
-        pass
+        if self.back_ground.need_switch:
+            self.back_ground.STATE_MACHINE.handle_state_event(('NEXT', 'STAGE03'))
 
     def enter(self, e):
+        self.back_ground.need_switch = False
         print("enter Stage02")
 
     def exit(self, e):
@@ -84,9 +93,11 @@ class Stage03:
         self.fence = load_image(file_path + 'bg_fence.png')
 
     def do(self):
-        pass
+        if self.back_ground.need_switch:
+            self.back_ground.STATE_MACHINE.handle_state_event(('NEXT', 'STAGE01'))
 
     def enter(self, e):
+        self.back_ground.need_switch = False
         print("enter Stage03")
 
     def exit(self, e):
@@ -104,23 +115,27 @@ class Stage03:
 
 class BackGround:
     def __init__(self):
+        self.need_switch = False
         self.STAGE_01 = Stage01(self)
         self.STAGE_02 = Stage02(self)
         self.STAGE_03 = Stage03(self)
         self.STATE_MACHINE = StateMachine(
             self.STAGE_01,
             {
-                self.STAGE_01: {z_down: self.STAGE_02},
-                self.STAGE_02: {z_down: self.STAGE_03},
-                self.STAGE_03: {z_down: self.STAGE_01}
+                self.STAGE_01: {switch_to_stage02: self.STAGE_02},
+                self.STAGE_02: {switch_to_stage03: self.STAGE_03},
+                self.STAGE_03: {switch_to_stage01: self.STAGE_01}
             }
         )
 
     def update(self):
+        if game_world.stage_switch_requested:
+            self.need_switch = True
+            game_world.stage_switch_requested = False
         self.STATE_MACHINE.update() # 상태 머신으로 하여금 업데이트
 
     def draw(self):
         self.STATE_MACHINE.draw() # 상태 머신으로 하여금 그리기
 
     def handle_event(self, event):
-        self.STATE_MACHINE.handle_state_event(('INPUT', event))
+        pass
