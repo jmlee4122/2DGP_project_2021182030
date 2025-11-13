@@ -31,6 +31,7 @@ class Stage01:
 
     def enter(self, e):
         self.back_ground.need_switch = False
+        self.back_ground.stage_num = 1
         print("enter Stage01")
 
     def exit(self, e):
@@ -65,6 +66,7 @@ class Stage02:
 
     def enter(self, e):
         self.back_ground.need_switch = False
+        self.back_ground.stage_num = 2
         print("enter Stage02")
 
     def exit(self, e):
@@ -98,6 +100,7 @@ class Stage03:
 
     def enter(self, e):
         self.back_ground.need_switch = False
+        self.back_ground.stage_num = 3
         print("enter Stage03")
 
     def exit(self, e):
@@ -114,13 +117,22 @@ class Stage03:
 
 
 class BackGround:
-    def __init__(self):
+    def __init__(self, last_stage):
         self.need_switch = False
+        self.stage_num = 1
         self.STAGE_01 = Stage01(self)
         self.STAGE_02 = Stage02(self)
         self.STAGE_03 = Stage03(self)
+
+        self.initial_stage = self.STAGE_01
+        if last_stage == 0:
+            self.initial_stage = self.STAGE_01
+        elif last_stage == 1:
+            self.initial_stage = self.STAGE_02
+        elif last_stage == 2:
+            self.initial_stage = self.STAGE_03
         self.STATE_MACHINE = StateMachine(
-            self.STAGE_01,
+            self.initial_stage,
             {
                 self.STAGE_01: {switch_to_stage02: self.STAGE_02},
                 self.STAGE_02: {switch_to_stage03: self.STAGE_03},
