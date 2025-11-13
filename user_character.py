@@ -289,9 +289,13 @@ class UserChar:
         loc_y = 20
         bullet = Bullet(self.x + loc_x, self.y + loc_y, self.face_dir * 20)
         game_world.add_object(bullet, 1)
+        game_world.add_collision_pair('basic:bullet', None, bullet)
 
     def get_bb(self):
         if self.is_down:
             return self.x - 90, self.y - 140, self.x + 90, self.y - 50
         else:
             return self.x - 40, self.y - 100, self.x + 40, self.y + 100
+
+    def handle_collision(self, group, other):
+        print('uc:fire collision')

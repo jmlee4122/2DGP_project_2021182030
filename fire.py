@@ -35,3 +35,7 @@ class Fire:
 
     def get_bb(self):
         return self.x - 40, self.y - 20, self.x + 40, self.y + 20
+
+    def handle_collision(self, group, other):
+        if group == 'uc:fire':
+            game_world.remove_object(self)

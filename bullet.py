@@ -26,3 +26,7 @@ class Bullet:
 
     def get_bb(self):
         return self.x - 10, self.y - 5, self.x + 10, self.y + 5
+
+    def handle_collision(self, group, other):
+        if group == 'basic:bullet':
+            game_world.remove_object(self)

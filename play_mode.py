@@ -37,9 +37,13 @@ def init():
     basic_monster = BasicMonster(user_char)
     game_world.add_object(basic_monster, 1)
 
+    game_world.add_collision_pair('uc:fire', user_char, None)
+    game_world.add_collision_pair('basic:bullet', basic_monster, None)
+
+
 def update():
     game_world.update()
-
+    game_world.handle_collisions()
 
 def draw():
     clear_canvas()

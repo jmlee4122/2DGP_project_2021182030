@@ -149,6 +149,10 @@ class BasicMonster:
         loc_y = 20
         fire = Fire(self.x + loc_x, self.y + loc_y, self.face_dir * 50)
         game_world.add_object(fire, 1)
+        game_world.add_collision_pair('uc:fire', None, fire)
 
     def get_bb(self):
         return self.x - 30, self.y - 150, self.x + 30, self.y + 150
+
+    def handle_collision(self, group, other):
+        print('basic:bullet collision')
