@@ -16,8 +16,8 @@ def left_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
-def a_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
+def hp_depleted(e):
+    return e[0] == 'HP' and e[1] == 'DEATH'
 def down_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
 def down_up(e):
@@ -261,9 +261,9 @@ class UserChar:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {down_down: self.DOWN_IDLE, space_down: self.IDLE, a_down: self.DEATH,
+                self.IDLE: {down_down: self.DOWN_IDLE, space_down: self.IDLE, hp_depleted: self.DEATH,
                             right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {down_down: self.DOWN_RUN, a_down: self.DEATH,
+                self.RUN: {down_down: self.DOWN_RUN, hp_depleted: self.DEATH,
                            right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
                 self.DOWN_IDLE: {down_up: self.IDLE, right_up: self.DOWN_RUN, left_up: self.DOWN_RUN,
                                  right_down: self.DOWN_RUN, left_down: self.DOWN_RUN},
@@ -307,3 +307,5 @@ class UserChar:
             self.hp -= damage
             print('uc:fire collision')
             print(f'User Character HP: {self.hp}')
+            if self.hp <= 0:
+                self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))

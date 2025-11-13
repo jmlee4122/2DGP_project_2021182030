@@ -5,7 +5,8 @@ import game_world
 from fire import Fire
 from state_machine import StateMachine
 
-# time_out = lambda e: e[0] == 'TIMEOUT'
+def hp_depleted(e):
+    return e[0] == 'HP' and e[1] == 'DEATH'
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 30.0  # Km / Hour
@@ -13,7 +14,7 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-TIME_PER_ACTION_DEATH = 0.3
+TIME_PER_ACTION_DEATH = 1.0
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
 FRAMES_PER_ACTION_DEATH = 8
 
@@ -43,7 +44,7 @@ class Death:
         self.clip_height = 0
 
     def do(self):
-        self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 10
+        self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * game_framework.frame_time) % 10
         self.frame = int(self.basic.frame)
         if self.frame >= 9:
             self.basic.is_dead = True
@@ -130,7 +131,7 @@ class BasicMonster:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {},
+                self.IDLE: {hp_depleted: self.DEATH},
                 self.DEATH: {}  # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
@@ -163,3 +164,5 @@ class BasicMonster:
             damage = 10
             self.hp -= damage
             print('basic:bullet collision')
+            if self.hp <= 0:
+                self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))
