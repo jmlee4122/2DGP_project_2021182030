@@ -13,16 +13,6 @@ def remove_collision_object(o):
         if o in pairs[1]:
             pairs[1].remove(o)
 
-def remove_collision_from_group(o, group):
-    if group in collision_pairs:
-        pairs = collision_pairs[group]
-        if o in pairs[0]:
-            pairs[0].remove(o)
-            print('remove')
-        if o in pairs[1]:
-            pairs[1].remove(o)
-            print('remove')
-
 def remove_object(o):
     for layer in world:
         if o in layer:
