@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time, draw_rectangle
+from pico2d import load_image, get_time, draw_rectangle, load_font
 
 import game_framework
 import game_world
@@ -114,6 +114,8 @@ class BasicMonster:
         self.delta_move = 0
         self.frame = 0
 
+        self.font = load_font('ENCR10B.TTF', 16)
+
         self.clip_size_x = 0
         self.clip_size_y = 0
 
@@ -140,6 +142,7 @@ class BasicMonster:
 
     def draw(self):
         self.STATE_MACHINE.draw()
+        self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
         draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
@@ -156,4 +159,7 @@ class BasicMonster:
         return self.x - 30, self.y - 150, self.x + 30, self.y + 150
 
     def handle_collision(self, group, other):
-        print('basic:bullet collision')
+        if group == 'basic:bullet':
+            damage = 10
+            self.hp -= damage
+            print('basic:bullet collision')

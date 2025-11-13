@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle, get_time
+from pico2d import load_image, draw_rectangle, get_time, load_font
 from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_SPACE, SDLK_DOWN
 
 import game_framework
@@ -248,6 +248,8 @@ class UserChar:
         self.is_attacking = False
         self.is_down = False
 
+        self.font = load_font('ENCR10B.TTF', 16)
+
         # 공격 시작 시각 기록
         self.attack_time = 0.0
 
@@ -276,6 +278,7 @@ class UserChar:
 
     def draw(self):
         self.STATE_MACHINE.draw()
+        self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
         draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
