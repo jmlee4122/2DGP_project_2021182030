@@ -26,9 +26,14 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            user_char.handle_event(event)
-            back_ground.handle_event(event)
-            basic_monster.handle_event(event)
+            if user_char is not None:
+                user_char.handle_event(event)
+            if back_ground is not None:
+                back_ground.handle_event(event)
+            if basic_monster is not None:
+                basic_monster.handle_event(event)
+            if boss_monster is not None:
+                boss_monster.handle_event(event)
 
 def init():
     global user_char
@@ -42,7 +47,7 @@ def init():
     game_world.enemies.clear()
     game_world.collision_pairs.clear()
 
-    back_ground = BackGround(last_stage)
+    back_ground = BackGround(2)
     game_world.add_object(back_ground, 0)
 
     uc_x = 0

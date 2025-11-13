@@ -2,7 +2,7 @@ from pico2d import load_image, get_time, draw_rectangle, load_font
 
 import game_framework
 import game_world
-from fire import Fire
+from slash import Slash
 from state_machine import StateMachine
 
 def hp_depleted(e):
@@ -90,7 +90,7 @@ class Idle:
             self.boss.face_dir = -1
         else:
             self.boss.face_dir = 1
-        if get_time() - self.boss.wait_time > 3:
+        if get_time() - self.boss.wait_time > 1.5:
             self.boss.attack()
             self.boss.wait_time = get_time()
 
@@ -152,17 +152,17 @@ class BossMonster:
     def attack(self):
         loc_x = 180 * self.face_dir
         loc_y = 20
-        fire = Fire(self.x + loc_x, self.y + loc_y, self.face_dir * 50)
-        game_world.add_object(fire, 1)
-        game_world.add_collision_pair('uc:fire', None, fire)
+        slash = Slash(self.x + loc_x, self.y + loc_y, self.face_dir * 10)
+        game_world.add_object(slash, 1)
+        #game_world.add_collision_pair('uc:fire', None, fire)
 
     def get_bb(self):
-        return self.x - 30, self.y - 150, self.x + 30, self.y + 150
+        return self.x - 80, self.y - 140, self.x + 50, self.y + 180
 
-    def handle_collision(self, group, other):
-        if group == 'basic:bullet':
-            damage = 10
-            self.hp -= damage
-            print('basic:bullet collision')
-            if self.hp <= 0:
-                self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))
+    # def handle_collision(self, group, other):
+    #     if group == 'basic:bullet':
+    #         damage = 10
+    #         self.hp -= damage
+    #         print('basic:bullet collision')
+    #         if self.hp <= 0:
+    #             self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))
