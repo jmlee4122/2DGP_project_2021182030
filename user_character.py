@@ -239,6 +239,7 @@ class Idle:
 
 class UserChar:
     def __init__(self):
+        self.hp = 100
         self.x, self.y = 960, 400
         self.frame = 0
         self.face_dir = 1 # 1: right, -1: left
@@ -298,4 +299,8 @@ class UserChar:
             return self.x - 40, self.y - 100, self.x + 40, self.y + 100
 
     def handle_collision(self, group, other):
-        print('uc:fire collision')
+        if group == 'uc:fire':
+            damage = 10
+            self.hp -= damage
+            print('uc:fire collision')
+            print(f'User Character HP: {self.hp}')

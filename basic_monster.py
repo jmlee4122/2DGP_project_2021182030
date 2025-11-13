@@ -107,6 +107,7 @@ class Idle:
 
 class BasicMonster:
     def __init__(self, user_char = None):
+        self.hp = 100
         self.x = 1300
         self.y = 420
         self.face_dir = -1 # 1: right, -1: left
