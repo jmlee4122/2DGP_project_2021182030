@@ -69,9 +69,9 @@ class DefendIdle:
 
     def draw(self):
         if self.uc.face_dir == 1:
-            self.image.draw(self.uc.x, self.uc.y, 300, 300)
+            self.image.draw(self.uc.x, self.uc.y, 402, 382)
         else:
-            self.image.composite_draw(0, 'h', self.uc.x, self.uc.y, 300, 300)
+            self.image.composite_draw(0, 'h', self.uc.x, self.uc.y, 402, 382)
 
 class DefendRun:
     def __init__(self, user_character):
@@ -82,6 +82,13 @@ class DefendRun:
     def enter(self, e):
         self.uc.is_defending = True
         self.uc.frame = 0
+        if q_down(e): # run -> defend run
+            pass
+        else: # defend idle -> defend run
+            if right_down(e) or left_up(e):
+                self.uc.delta_move = self.uc.face_dir = 1
+            elif left_down(e) or right_up(e):
+                self.uc.delta_move = self.uc.face_dir = -1
 
     def exit(self, e):
         self.uc.is_defending = False
@@ -91,9 +98,9 @@ class DefendRun:
 
     def draw(self):
         if self.uc.face_dir == 1:
-            self.image.draw(self.uc.x, self.uc.y, 300, 300)
+            self.image.draw(self.uc.x, self.uc.y, 402, 382)
         else:
-            self.image.composite_draw(0, 'h', self.uc.x, self.uc.y, 300, 300)
+            self.image.composite_draw(0, 'h', self.uc.x, self.uc.y, 402, 382)
 
 class Death:
     def __init__(self, user_character):
@@ -208,6 +215,11 @@ class Run:
                 self.clip_bottom = 0
             elif self.uc.face_dir == -1:
                 self.clip_bottom = 2
+        elif q_up(e):
+            if self.uc.face_dir == 1:
+                self.clip_bottom = 0
+            elif self.uc.face_dir == -1:
+                self.clip_bottom = 2
         else:
             if right_down(e) or left_up(e):
                 self.uc.delta_move = self.uc.face_dir = 1
@@ -315,17 +327,17 @@ class UserChar:
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {q_down: self.DEFEND_IDLE, down_down: self.DOWN_IDLE, space_down: self.IDLE, hp_depleted: self.DEATH,
+                self.IDLE: {hp_depleted: self.DEATH, q_down: self.DEFEND_IDLE, down_down: self.DOWN_IDLE, space_down: self.IDLE,
                             right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {q_down: self.DEFEND_RUN, down_down: self.DOWN_RUN, hp_depleted: self.DEATH,
+                self.RUN: {hp_depleted: self.DEATH, q_down: self.DEFEND_RUN, down_down: self.DOWN_RUN,
                            right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
-                self.DOWN_IDLE: {down_up: self.IDLE, right_up: self.DOWN_RUN, left_up: self.DOWN_RUN,
+                self.DOWN_IDLE: {hp_depleted: self.DEATH, down_up: self.IDLE, right_up: self.DOWN_RUN, left_up: self.DOWN_RUN,
                                  right_down: self.DOWN_RUN, left_down: self.DOWN_RUN},
-                self.DOWN_RUN: {down_up: self.RUN, right_up: self.DOWN_IDLE, left_up: self.DOWN_IDLE,
+                self.DOWN_RUN: {hp_depleted: self.DEATH, down_up: self.RUN, right_up: self.DOWN_IDLE, left_up: self.DOWN_IDLE,
                                  right_down: self.DOWN_IDLE, left_down: self.DOWN_IDLE},
-                self.DEFEND_IDLE: {q_up: self.IDLE, right_up: self.DEFEND_RUN, left_up: self.DEFEND_RUN,
+                self.DEFEND_IDLE: {hp_depleted: self.DEATH, q_up: self.IDLE, right_up: self.DEFEND_RUN, left_up: self.DEFEND_RUN,
                                  right_down: self.DEFEND_RUN, left_down: self.DEFEND_RUN},
-                self.DEFEND_RUN: {q_up: self.RUN, right_up: self.DEFEND_IDLE, left_up: self.DEFEND_IDLE,
+                self.DEFEND_RUN: {hp_depleted: self.DEATH, q_up: self.RUN, right_up: self.DEFEND_IDLE, left_up: self.DEFEND_IDLE,
                                  right_down: self.DEFEND_IDLE, left_down: self.DEFEND_IDLE},
                 self.DEATH: {} # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
