@@ -1,5 +1,5 @@
 from pico2d import load_image, draw_rectangle, get_time, load_font
-from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_SPACE, SDLK_DOWN
+from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_SPACE, SDLK_DOWN, SDLK_q
 
 import game_framework
 import game_world
@@ -22,6 +22,10 @@ def down_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
 def down_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
+def q_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_q
+def q_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_q
 
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -46,6 +50,22 @@ FRAMES_PER_ACTION_RUN = 6
 # 공격 이미지를 유지할 시간 (프레임레이트에 맞게 조절)
 ATTACK_DURATION = 0.05  # 초
 
+
+class Defend:
+    def __init__(self, user_character):
+        pass
+
+    def enter(self, e):
+        pass
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Death:
     def __init__(self, user_character):
@@ -261,10 +281,11 @@ class UserChar:
         self.DOWN_RUN = DownRun(self)
         self.DOWN_IDLE = DownIdle(self)
         self.DEATH = Death(self)
+        self.DEFEND = Defend(self)
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {down_down: self.DOWN_IDLE, space_down: self.IDLE, hp_depleted: self.DEATH,
+                self.IDLE: {q_down: self.DEFEND, down_down: self.DOWN_IDLE, space_down: self.IDLE, hp_depleted: self.DEATH,
                             right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
                 self.RUN: {down_down: self.DOWN_RUN, hp_depleted: self.DEATH,
                            right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
@@ -272,6 +293,7 @@ class UserChar:
                                  right_down: self.DOWN_RUN, left_down: self.DOWN_RUN},
                 self.DOWN_RUN: {down_up: self.RUN, right_up: self.DOWN_IDLE, left_up: self.DOWN_IDLE,
                                  right_down: self.DOWN_IDLE, left_down: self.DOWN_IDLE},
+                self.DEFEND: {q_up: self.IDLE},
                 self.DEATH: {} # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
