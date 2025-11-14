@@ -299,6 +299,7 @@ class UserChar:
         bullet = Bullet(self.x + loc_x, self.y + loc_y, self.face_dir * 20)
         game_world.add_object(bullet, 1)
         game_world.add_collision_pair('basic:bullet', None, bullet)
+        game_world.add_collision_pair('boss:bullet', None, bullet)
 
     def get_bb(self):
         if self.is_down:
@@ -311,6 +312,13 @@ class UserChar:
             damage = 10
             self.hp -= damage
             print('uc:fire collision')
+            print(f'User Character HP: {self.hp}')
+            if self.hp <= 0:
+                self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))
+        elif group == 'uc:slash':
+            damage = 20
+            self.hp -= damage
+            print('uc:slash collision')
             print(f'User Character HP: {self.hp}')
             if self.hp <= 0:
                 self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))

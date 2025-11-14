@@ -42,6 +42,6 @@ class Slash:
     def get_bb(self):
         return self.x - 140, self.y - 140, self.x + 140, self.y + 140
 
-    # def handle_collision(self, group, other):
-    #     if group == 'uc:fire':
-    #         game_world.remove_object(self)
+    def handle_collision(self, group, other):
+        if group == 'uc:slash':
+            game_world.remove_object(self)

@@ -30,3 +30,5 @@ class Bullet:
     def handle_collision(self, group, other):
         if group == 'basic:bullet':
             game_world.remove_object(self)
+        elif group == 'boss:bullet':
+            game_world.remove_object(self)

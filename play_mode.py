@@ -47,7 +47,7 @@ def init():
     game_world.enemies.clear()
     game_world.collision_pairs.clear()
 
-    back_ground = BackGround(2)
+    back_ground = BackGround(last_stage)
     game_world.add_object(back_ground, 0)
 
     uc_x = 0
@@ -104,9 +104,13 @@ def init():
 
 
     game_world.add_collision_pair('uc:fire', user_char, None)
+    game_world.add_collision_pair('uc:slash', user_char, None)
     if back_ground.stage_num == 1 or back_ground.stage_num == 2:
         for basic_monster in basic_monsters:
             game_world.add_collision_pair('basic:bullet', basic_monster, None)
+    elif back_ground.stage_num == 3:
+        for boss_monster in boss_monsters:
+            game_world.add_collision_pair('boss:bullet', boss_monster, None)
 
     if back_ground:
         last_stage = back_ground.stage_num

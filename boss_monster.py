@@ -157,15 +157,15 @@ class BossMonster:
         loc_y = 20
         slash = Slash(self.x + loc_x, self.y + loc_y, self.face_dir * 10)
         game_world.add_object(slash, 1)
-        #game_world.add_collision_pair('uc:fire', None, fire)
+        game_world.add_collision_pair('uc:slash', None, slash)
 
     def get_bb(self):
         return self.x - 40, self.y - 140, self.x + 60, self.y + 160
 
-    # def handle_collision(self, group, other):
-    #     if group == 'basic:bullet':
-    #         damage = 10
-    #         self.hp -= damage
-    #         print('basic:bullet collision')
-    #         if self.hp <= 0:
-    #             self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))
+    def handle_collision(self, group, other):
+        if group == 'boss:bullet':
+            damage = 10
+            self.hp -= damage
+            print('boss:bullet collision')
+            if self.hp <= 0:
+                self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))
