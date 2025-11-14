@@ -44,6 +44,7 @@ class Death:
         self.clip_height = 0
 
     def do(self):
+        game_framework.frame_time = min(game_framework.frame_time, 0.006)
         self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * game_framework.frame_time) % 10
         self.frame = int(self.basic.frame)
         if self.frame >= 9:
@@ -86,16 +87,17 @@ class Idle:
         pass
 
     def do(self):
+        game_framework.frame_time = min(game_framework.frame_time, 0.006)
         self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 5
         #self.basic.frame = 0
         if self.basic.user.x < self.basic.x:
             self.basic.face_dir = -1
         else:
             self.basic.face_dir = 1
+
         if get_time() - self.basic.wait_time > 3:
             self.basic.attack()
             self.basic.wait_time = get_time()
-            # self.basic.STATE_MACHINE.handle_state_event(('TIMEOUT', None))
 
     def draw(self):
         if self.basic.face_dir == 1:

@@ -47,6 +47,7 @@ class Death:
         self.clip_height = 0
 
     def do(self):
+        game_framework.frame_time = min(game_framework.frame_time, 0.006)
         self.boss.frame = (self.boss.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * game_framework.frame_time) % 10
         self.frame = int(self.boss.frame)
         if self.frame >= 9:
@@ -88,11 +89,13 @@ class Idle:
         pass
 
     def do(self):
+        game_framework.frame_time = min(game_framework.frame_time, 0.006)
         self.boss.frame = (self.boss.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 5
         if self.boss.user.x < self.boss.x:
             self.boss.face_dir = -1
         else:
             self.boss.face_dir = 1
+
         if get_time() - self.boss.wait_time > 1.5:
             self.boss.attack()
             self.boss.wait_time = get_time()
