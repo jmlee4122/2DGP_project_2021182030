@@ -51,21 +51,49 @@ FRAMES_PER_ACTION_RUN = 6
 ATTACK_DURATION = 0.05  # 초
 
 
-class Defend:
+class DefendIdle:
     def __init__(self, user_character):
-        pass
+        self.uc = user_character
+        file_path = '2DGP_character/user_character/'
+        self.image = load_image(file_path + 'user_defend.png')
 
     def enter(self, e):
-        pass
+        self.uc.is_defending = True
+        self.uc.frame = 0
 
     def exit(self, e):
-        pass
+        self.uc.is_defending = False
 
     def do(self):
         pass
 
     def draw(self):
+        if self.uc.face_dir == 1:
+            self.image.draw(self.uc.x, self.uc.y, 300, 300)
+        else:
+            self.image.composite_draw(0, 'h', self.uc.x, self.uc.y, 300, 300)
+
+class DefendRun:
+    def __init__(self, user_character):
+        self.uc = user_character
+        file_path = '2DGP_character/user_character/'
+        self.image = load_image(file_path + 'user_defend.png')
+
+    def enter(self, e):
+        self.uc.is_defending = True
+        self.uc.frame = 0
+
+    def exit(self, e):
+        self.uc.is_defending = False
+
+    def do(self):
         pass
+
+    def draw(self):
+        if self.uc.face_dir == 1:
+            self.image.draw(self.uc.x, self.uc.y, 300, 300)
+        else:
+            self.image.composite_draw(0, 'h', self.uc.x, self.uc.y, 300, 300)
 
 class Death:
     def __init__(self, user_character):
@@ -78,7 +106,6 @@ class Death:
 
     def enter(self, e):
         self.uc.frame = 0
-        self.uc.is_jumping = False
         self.uc.is_moving = False
         self.uc.y = 400
         self.finished = False
@@ -268,6 +295,7 @@ class UserChar:
         self.delta_move = 0
         self.is_moving = False
         self.is_attacking = False
+        self.is_defending = False
         self.is_down = False
         self.is_dead = False
 
@@ -280,20 +308,25 @@ class UserChar:
         self.RUN = Run(self)
         self.DOWN_RUN = DownRun(self)
         self.DOWN_IDLE = DownIdle(self)
+        self.DEFEND_RUN = DefendRun(self)
+        self.DEFEND_IDLE = DefendIdle(self)
         self.DEATH = Death(self)
-        self.DEFEND = Defend(self)
+
         self.STATE_MACHINE = StateMachine(
             self.IDLE,  # 시작상태
             {  # 룰
-                self.IDLE: {q_down: self.DEFEND, down_down: self.DOWN_IDLE, space_down: self.IDLE, hp_depleted: self.DEATH,
+                self.IDLE: {q_down: self.DEFEND_IDLE, down_down: self.DOWN_IDLE, space_down: self.IDLE, hp_depleted: self.DEATH,
                             right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {down_down: self.DOWN_RUN, hp_depleted: self.DEATH,
+                self.RUN: {q_down: self.DEFEND_RUN, down_down: self.DOWN_RUN, hp_depleted: self.DEATH,
                            right_down: self.IDLE, left_down: self.IDLE, right_up: self.IDLE, left_up: self.IDLE},
                 self.DOWN_IDLE: {down_up: self.IDLE, right_up: self.DOWN_RUN, left_up: self.DOWN_RUN,
                                  right_down: self.DOWN_RUN, left_down: self.DOWN_RUN},
                 self.DOWN_RUN: {down_up: self.RUN, right_up: self.DOWN_IDLE, left_up: self.DOWN_IDLE,
                                  right_down: self.DOWN_IDLE, left_down: self.DOWN_IDLE},
-                self.DEFEND: {q_up: self.IDLE},
+                self.DEFEND_IDLE: {q_up: self.IDLE, right_up: self.DEFEND_RUN, left_up: self.DEFEND_RUN,
+                                 right_down: self.DEFEND_RUN, left_down: self.DEFEND_RUN},
+                self.DEFEND_RUN: {q_up: self.RUN, right_up: self.DEFEND_IDLE, left_up: self.DEFEND_IDLE,
+                                 right_down: self.DEFEND_IDLE, left_down: self.DEFEND_IDLE},
                 self.DEATH: {} # 죽음 상태에서는 아무 이벤트도 처리하지 않음
             }
         )
@@ -332,6 +365,8 @@ class UserChar:
     def handle_collision(self, group, other):
         if group == 'uc:fire':
             damage = 10
+            if self.is_defending:
+                damage = damage // 2
             self.hp -= damage
             print('uc:fire collision')
             print(f'User Character HP: {self.hp}')
@@ -339,6 +374,8 @@ class UserChar:
                 self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))
         elif group == 'uc:slash':
             damage = 20
+            if self.is_defending:
+                damage = damage // 2
             self.hp -= damage
             print('uc:slash collision')
             print(f'User Character HP: {self.hp}')
