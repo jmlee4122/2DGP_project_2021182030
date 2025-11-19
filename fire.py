@@ -27,7 +27,8 @@ class Fire:
         draw_rectangle(*self.get_bb())
 
     def update(self):
-        dx = self.velocity * game_framework.frame_time * PIXEL_PER_METER
+        dt = min(game_framework.frame_time, 0.06)
+        dx = self.velocity * dt * PIXEL_PER_METER
         self.x += dx
         self.dis += abs(dx)
         if self.dis > self.range:

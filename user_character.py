@@ -34,7 +34,7 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-TIME_PER_ACTION_DEATH = 0.3
+TIME_PER_ACTION_DEATH = 1.0
 ACTION_PER_TIME_DEATH = 1.0 / TIME_PER_ACTION_DEATH
 FRAMES_PER_ACTION_DEATH = 8
 
@@ -121,8 +121,9 @@ class Death:
         pass
 
     def do(self):
+        dt = min(game_framework.frame_time, 0.06)
         if not self.finished:
-            self.uc.frame = (self.uc.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * game_framework.frame_time) % 8
+            self.uc.frame = (self.uc.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * dt) % 8
             if int(self.uc.frame) == 7:
                 self.finished = True
         else:
@@ -232,8 +233,9 @@ class Run:
         self.uc.frame = 0
 
     def do(self):
-        self.uc.frame = (self.uc.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME_RUN * game_framework.frame_time) % 6
-        self.uc.x += self.uc.delta_move * RUN_SPEED_PPS * game_framework.frame_time
+        dt = min(game_framework.frame_time, 0.06)
+        self.uc.frame = (self.uc.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME_RUN * dt) % 6
+        self.uc.x += self.uc.delta_move * RUN_SPEED_PPS * dt
 
         if self.uc.face_dir == 1 and int(self.uc.frame) >= 6:
             self.clip_bottom = 1

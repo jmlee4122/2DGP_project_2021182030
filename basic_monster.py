@@ -44,8 +44,8 @@ class Death:
         self.clip_height = 0
 
     def do(self):
-        game_framework.frame_time = min(game_framework.frame_time, 0.006)
-        self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * game_framework.frame_time) % 10
+        dt = min(game_framework.frame_time, 0.06)
+        self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_DEATH * ACTION_PER_TIME_DEATH * dt) % 10
         self.frame = int(self.basic.frame)
         if self.frame >= 9:
             self.basic.is_dead = True
@@ -87,8 +87,8 @@ class Idle:
         pass
 
     def do(self):
-        game_framework.frame_time = min(game_framework.frame_time, 0.006)
-        self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * game_framework.frame_time) % 5
+        dt = min(game_framework.frame_time, 0.06)
+        self.basic.frame = (self.basic.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME_IDLE * dt) % 5
         #self.basic.frame = 0
         if self.basic.user.x < self.basic.x:
             self.basic.face_dir = -1

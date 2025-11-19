@@ -32,7 +32,8 @@ class Slash:
         draw_rectangle(*self.get_bb())
 
     def update(self):
-        dx = self.velocity * game_framework.frame_time * PIXEL_PER_METER
+        dt = min(game_framework.frame_time, 0.06)
+        dx = self.velocity * dt * PIXEL_PER_METER
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         self.x += dx
         self.dis += abs(dx)
