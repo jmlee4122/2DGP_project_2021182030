@@ -71,7 +71,7 @@ def init():
         uc_x = 960
         uc_y = 400
         basic_x.append(randint(1300, 1600))
-        basic_x.append(randint(1600, 1900))
+        basic_x.append(randint(1300, 1600))
         basic_x.append(randint(300, 600))
         basic_y = 400
         basic_num = 3
