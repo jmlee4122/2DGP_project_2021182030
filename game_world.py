@@ -1,6 +1,11 @@
 world = [[], [], []]
+menu = [[], [], []]
+
 enemies = set()
 stage_switch_requested = False
+
+def add_menu_object(o, depth):
+    menu[depth].append(o)
 
 def add_object(o, depth):
     world[depth].append(o)
@@ -15,6 +20,13 @@ def remove_collision_object(o):
         if o in pairs[1]:
             pairs[1].remove(o)
 
+def remove_menu_object(o):
+    for layer in menu:
+        if o in layer:
+            layer.remove(o)
+            return
+    print('Object not in menu')
+
 def remove_object(o):
     for layer in world:
         if o in layer:
@@ -23,10 +35,20 @@ def remove_object(o):
             return
     print('Object not in world')
 
+def update_menu():
+    for layer in menu:
+        for o in layer:
+            o.update()
+
 def update():
     for layer in world:
         for o in layer:
             o.update()
+
+def render_menu():
+    for layer in menu:
+        for o in layer:
+            o.draw()
 
 def render():
     for layer in world:

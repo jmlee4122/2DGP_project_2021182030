@@ -17,29 +17,31 @@ def init():
     resume_button = ResumeButton()
     quit_button = QuitButton()
 
-    #game_world.add_object(restart_button, 2)
-    game_world.add_object(resume_button, 2)
-    #game_world.add_object(quit_button, 2)
+    #game_world.add_menu_object(restart_button, 0)
+    game_world.add_menu_object(resume_button, 0)
+    #game_world.add_menu_object(quit_button, 0)
 
 def finish():
     global restart_button
     global resume_button
     global quit_button
 
-    game_world.remove_object(restart_button)
-    game_world.remove_object(resume_button)
-    game_world.remove_object(quit_button)
+    game_world.remove_menu_object(restart_button)
+    game_world.remove_menu_object(resume_button)
+    game_world.remove_menu_object(quit_button)
 
     del restart_button
     del resume_button
     del quit_button
 
 def update():
-    game_world.update()
+    #game_world.update()
+    game_world.update_menu()
 
 def draw():
     clear_canvas()
     game_world.render()
+    game_world.render_menu()
     update_canvas()
 
 def handle_events():
