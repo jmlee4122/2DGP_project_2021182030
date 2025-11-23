@@ -1,4 +1,4 @@
-world = [[], []]
+world = [[], [], []]
 enemies = set()
 stage_switch_requested = False
 

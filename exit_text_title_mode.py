@@ -8,7 +8,7 @@ class Inactive:
     def __init__(self, text):
         self.text = text
 
-    def enter(self, event):
+    def enter(self, e):
         self.text.image = load_image("2DGP_background/start_screen/exit_1.png")
 
     def exit(self, e):
@@ -28,7 +28,7 @@ class Active:
         self.text.is_active = True
         self.text.image = load_image("2DGP_background/start_screen/exit_2.png")
 
-    def exit(self, event):
+    def exit(self, e):
         self.text.is_active = False
 
     def do(self):

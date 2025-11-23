@@ -1,14 +1,15 @@
-from pico2d import draw_rectangle, load_image, get_canvas_height
+from pico2d import load_image, get_canvas_height, draw_rectangle
 from sdl2 import SDL_MOUSEMOTION
 
 from state_machine import StateMachine
 
+
 class Inactive:
-    def __init__(self, text):
-        self.text = text
+    def __init__(self, button):
+        self.button = button
 
     def enter(self, e):
-        self.text.image = load_image("2DGP_background/start_screen/game_start_1.png")
+        self.button.text_image = load_image("2DGP_GUI/resume_basic.png")
 
     def exit(self, e):
         pass
@@ -17,34 +18,36 @@ class Inactive:
         pass
 
     def draw(self):
-        self.text.image.draw(self.text.x, self.text.y, self.text.width, self.text.height)
+        self.button.button_image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
+        self.button.text_image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
 
 
 class Active:
-    def __init__(self, text):
-        self.text = text
+    def __init__(self, button):
+        self.button = button
 
     def enter(self, e):
-        self.text.is_active = True
-        self.text.image = load_image("2DGP_background/start_screen/game_start_2.png")
+        self.button.is_active = True
+        self.button.text_image = load_image("2DGP_GUI/resume_2.png")
 
     def exit(self, e):
-        self.text.is_active = False
+        self.button.is_active = False
 
     def do(self):
         pass
 
     def draw(self):
-        self.text.image.draw(self.text.x, self.text.y, self.text.width, self.text.height)
+        self.button.button_image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
+        self.button.text_image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
 
-
-class StartText:
+class ResumeButton:
     def __init__(self):
-        file_path = "2DGP_background/start_screen/"
-        self.image = load_image(file_path + 'game_start_1.png')
+        file_path = "2DGP_GUI/"
+        self.text_image = load_image(file_path + 'resume_basic.png')
+        self.button_image = load_image(file_path + 'button.png')
 
         self.x = 1920 / 2
-        self.y = 1080 / 2 * 0.6
+        self.y = 1080 * 0.2
         self.width = 450
         self.height = 150
         self.is_active = False
