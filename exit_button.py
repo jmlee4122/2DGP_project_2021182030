@@ -8,7 +8,7 @@ class Inactive:
         self.button = button
 
     def enter(self, event):
-        pass
+        self.button.image = load_image("2DGP_background/start_screen/exit_1.png")
 
     def exit(self, event):
         pass
@@ -17,14 +17,14 @@ class Inactive:
         pass
 
     def draw(self):
-        pass
+        self.button.image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
 
 class Active:
     def __init__(self, button):
         self.button = button
 
     def enter(self, event):
-        pass
+        self.button.image = load_image("2DGP_background/start_screen/exit_2.png")
 
     def exit(self, event):
         pass
@@ -33,7 +33,7 @@ class Active:
         pass
 
     def draw(self):
-        pass
+        self.button.image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
 
 class Exit_button:
     def __init__(self):
@@ -41,9 +41,9 @@ class Exit_button:
         self.image = load_image(file_path + 'exit_1.png')
 
         self.x = 1920 / 2
-        self.y = 1080 / 2 * 0.4
-        self.width = 400
-        self.height = 100
+        self.y = 1080 / 2 * 0.3
+        self.width = 450
+        self.height = 150
 
         self.INACTIVE = Inactive(self)
         self.ACTIVE = Active(self)
@@ -66,4 +66,4 @@ class Exit_button:
         self.STATE_MACHINE.handle_state_event(('INPUT', event))
 
     def get_bb(self):
-        return self.x - self.width / 2, self.y - self.height / 2, self.x + self.width / 2, self.y + self.height / 2
+        return self.x - self.width / 4, self.y - self.height / 2, self.x + self.width / 4, self.y + self.height / 2

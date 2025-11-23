@@ -7,7 +7,7 @@ class Inactive:
         self.button = button
 
     def enter(self, event):
-        pass
+        self.button.image = load_image("2DGP_background/start_screen/game_start_1.png")
 
     def exit(self, event):
         pass
@@ -16,7 +16,7 @@ class Inactive:
         pass
 
     def draw(self):
-        pass
+        self.button.image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
 
 
 class Active:
@@ -24,7 +24,7 @@ class Active:
         self.button = button
 
     def enter(self, event):
-        pass
+        self.button.image = load_image("2DGP_background/start_screen/game_start_2.png")
 
     def exit(self, event):
         pass
@@ -33,7 +33,7 @@ class Active:
         pass
 
     def draw(self):
-        pass
+        self.button.image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
 
 
 class Start_button:
@@ -43,8 +43,8 @@ class Start_button:
 
         self.x = 1920 / 2
         self.y = 1080 / 2 * 0.6
-        self.width = 400
-        self.height = 100
+        self.width = 450
+        self.height = 150
 
         self.INACTIVE = Inactive(self)
         self.ACTIVE = Active(self)
