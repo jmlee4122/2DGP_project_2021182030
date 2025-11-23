@@ -29,12 +29,13 @@ def init():
 
 
 def update():
-    if start_button is not None:
-        if start_button.is_clicked:
-            game_framework.change_mode(play_mode)
-    if exit_button is not None:
-        if exit_button.is_clicked:
-            game_framework.quit()
+        # if start_button is not None:
+        #     if start_button.is_clicked:
+        #         game_framework.change_mode(play_mode)
+        # if exit_button is not None:
+        #     if exit_button.is_clicked:
+        #         game_framework.quit()
+        pass
 #game_framework.change_mode(play_mode)
 
 
@@ -83,6 +84,13 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            if start_button is not None:
+                if start_button.is_active:
+                    game_framework.change_mode(play_mode)
+            if exit_button is not None:
+                if exit_button.is_active:
+                    game_framework.quit()
         else:
             if start_button is not None:
                 start_button.handle_event(event)

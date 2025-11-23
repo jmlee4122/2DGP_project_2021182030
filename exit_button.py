@@ -1,11 +1,8 @@
 from pico2d import load_image, get_canvas_height
 from pico2d import draw_rectangle
-from sdl2 import SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN
+from sdl2 import SDL_MOUSEMOTION
 
 from state_machine import StateMachine
-
-def left_click(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_MOUSEBUTTONDOWN
 
 class Inactive:
     def __init__(self, button):
@@ -28,12 +25,11 @@ class Active:
         self.button = button
 
     def enter(self, e):
-        if e[1].type == SDL_MOUSEBUTTONDOWN:
-            self.button.is_clicked = True
+        self.button.is_active = True
         self.button.image = load_image("2DGP_background/start_screen/exit_2.png")
 
     def exit(self, event):
-        pass
+        self.button.is_active = False
 
     def do(self):
         pass
@@ -50,7 +46,7 @@ class ExitButton:
         self.y = 1080 / 2 * 0.3
         self.width = 450
         self.height = 150
-        self.is_clicked = False
+        self.is_active = False
 
         self.INACTIVE = Inactive(self)
         self.ACTIVE = Active(self)
@@ -80,7 +76,7 @@ class ExitButton:
             self.INACTIVE,  # 시작상태
             {  # 룰
                 self.INACTIVE: {mouse_in: self.ACTIVE},
-                self.ACTIVE: {mouse_out: self.INACTIVE, left_click: self.ACTIVE}
+                self.ACTIVE: {mouse_out: self.INACTIVE}
             }
         )
 
