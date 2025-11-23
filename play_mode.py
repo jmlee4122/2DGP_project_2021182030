@@ -139,6 +139,8 @@ def draw():
 
 
 def finish():
+    global last_stage
+    last_stage = 0
     game_world.clear()
 
 def pause(): pass
