@@ -47,7 +47,7 @@ class ResumeButton:
         self.button_image = load_image(file_path + 'button.png')
 
         self.x = 1920 / 2
-        self.y = 1080 * 0.2
+        self.y = 1080 * 0.8
         self.width = 450
         self.height = 150
         self.is_active = False

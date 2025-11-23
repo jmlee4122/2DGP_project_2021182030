@@ -1,4 +1,7 @@
-from pico2d import clear_canvas, update_canvas
+from pico2d import clear_canvas, update_canvas, get_events
+from sdl2 import SDL_QUIT
+
+import game_framework
 import game_world
 from quit_button import QuitButton
 from restart_button import RestartButton
@@ -40,7 +43,23 @@ def draw():
     update_canvas()
 
 def handle_events():
-    pass
+    event_list = get_events()
+
+    for event in event_list:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
+        # elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+        #     game_framework.quit()
+        # elif event.type == SDL_MOUSEBUTTONDOWN:
+        #     if start_text is not None:
+        #         if start_text.is_active:
+        #             game_framework.change_mode(play_mode)
+        #     if exit_text is not None:
+        #         if exit_text.is_active:
+        #             game_framework.quit()
+        else:
+            if resume_button is not None:
+                resume_button.handle_event(event)
 
 def pause():
     pass
