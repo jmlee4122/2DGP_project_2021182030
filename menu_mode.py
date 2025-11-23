@@ -3,6 +3,7 @@ from sdl2 import SDL_QUIT, SDL_MOUSEBUTTONDOWN
 
 import game_framework
 import game_world
+import title_mode
 from quit_button import QuitButton
 from restart_button import RestartButton
 from resume_button import ResumeButton
@@ -17,9 +18,9 @@ def init():
     resume_button = ResumeButton()
     quit_button = QuitButton()
 
-    #game_world.add_menu_object(restart_button, 0)
+    game_world.add_menu_object(restart_button, 0)
     game_world.add_menu_object(resume_button, 0)
-    #game_world.add_menu_object(quit_button, 0)
+    game_world.add_menu_object(quit_button, 0)
 
 def finish():
     global restart_button
@@ -45,18 +46,28 @@ def draw():
     update_canvas()
 
 def handle_events():
+    global restart_button
+    global resume_button
+    global quit_button
     event_list = get_events()
 
     for event in event_list:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif event.type == SDL_MOUSEBUTTONDOWN:
-            if resume_button is not None:
-                if resume_button.is_active:
-                    game_framework.pop_mode()
+        elif event.type == SDL_MOUSEBUTTONDOWN and restart_button.is_active:
+            game_framework.change_mode_clear(title_mode)
+        elif event.type == SDL_MOUSEBUTTONDOWN and resume_button.is_active:
+            game_framework.pop_mode()
+        elif event.type == SDL_MOUSEBUTTONDOWN and quit_button.is_active:
+            game_framework.quit()
         else:
+            if restart_button is not None:
+                restart_button.handle_event(event)
             if resume_button is not None:
                 resume_button.handle_event(event)
+            if quit_button is not None:
+                quit_button.handle_event(event)
+
 
 def pause():
     pass
