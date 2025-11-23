@@ -1,23 +1,33 @@
 from pico2d import *
 
+import exit_button
 import game_framework
 import play_mode
+import start_button
+from exit_button import Exit_button
+from start_button import Start_button
 
 image = None
-
+start_button = None
+exit_button = None
 
 def init():
     # 타이틀 이미지를 로드
     file_path = "2DGP_background/start_screen/"
     global image
-    image = load_image(file_path + 'start_screen.png')
+    global start_button
+    global exit_button
 
+    image = load_image(file_path + 'start_screen.png')
+    start_button = Start_button()
+    exit_button = Exit_button()
     # 디버그 출력: 실제 캔버스와 이미지 크기 확인
     try:
         canvas_w, canvas_h = get_canvas_width(), get_canvas_height()
-        print(f"[DEBUG] canvas: {canvas_w}x{canvas_h}, image: {image.w}x{image.h}")
+        #print(f"[DEBUG] canvas: {canvas_w}x{canvas_h}, image: {image.w}x{image.h}")
     except Exception:
-        print("[DEBUG] init: unable to read canvas/image sizes")
+        #print("[DEBUG] init: unable to read canvas/image sizes")
+        pass
 
 
 def update():
@@ -38,13 +48,28 @@ def draw():
 
     # 캔버스 크기로 강제로 그려서 어떤 화면 배율에서도 동일하게 보이게 함
     image.draw(cx, cy, canvas_w, canvas_h)
+    start_button.draw()
+    exit_button.draw()
     update_canvas()
 
 
 def finish():
     global image
-    del image
+    global start_button
+    global exit_button
 
+    if start_button is not None:
+        del start_button
+        start_button = None
+
+    if exit_button is not None:
+        del exit_button
+        exit_button = None
+
+    # 타이틀 이미지 정리
+    if image is not None:
+        del image
+        image = None
 
 def handle_events():
     event_list = get_events() #현재까지 들어온 이벤트를 받아온다.
@@ -54,8 +79,11 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            game_framework.change_mode(play_mode)
+        else:
+            if start_button is not None:
+                start_button.handle_event(event)
+            if exit_button is not None:
+                exit_button.handle_event(event)
 
 
 def pause():
