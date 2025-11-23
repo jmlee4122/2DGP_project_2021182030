@@ -4,6 +4,7 @@ from pico2d import *
 
 
 import game_world
+import menu_mode
 from back_ground import BackGround
 from basic_monster import BasicMonster
 from boss_monster import BossMonster
@@ -24,7 +25,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.change_mode(menu_mode)
         else:
             if user_char is not None:
                 user_char.handle_event(event)
