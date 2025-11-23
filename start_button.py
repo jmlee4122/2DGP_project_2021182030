@@ -1,6 +1,6 @@
-from pico2d import draw_rectangle, load_image
+from pico2d import draw_rectangle, load_image, get_canvas_height
+from sdl2 import SDL_MOUSEMOTION
 from state_machine import StateMachine
-
 
 class Inactive:
     def __init__(self, button):
@@ -48,11 +48,34 @@ class Start_button:
 
         self.INACTIVE = Inactive(self)
         self.ACTIVE = Active(self)
+
+        def mouse_in(e):
+            if e[0] != 'INPUT':
+                return False
+            ev = e[1]
+            if ev.type != SDL_MOUSEMOTION:
+                return False
+            mx, my = ev.x, ev.y
+            my = get_canvas_height() - my
+            l, b, r, t = self.get_bb()
+            return l <= mx <= r and b <= my <= t
+
+        def mouse_out(e):
+            if e[0] != 'INPUT':
+                return False
+            ev = e[1]
+            if ev.type != SDL_MOUSEMOTION:
+                return False
+            mx, my = ev.x, ev.y
+            my = get_canvas_height() - my
+            l, b, r, t = self.get_bb()
+            return not (l <= mx <= r and b <= my <= t)
+
         self.STATE_MACHINE = StateMachine(
             self.INACTIVE,  # 시작상태
             {  # 룰
-                self.INACTIVE: {},
-                self.ACTIVE: {}
+                self.INACTIVE: {mouse_in: self.ACTIVE},
+                self.ACTIVE: {mouse_out: self.INACTIVE}
             }
         )
     def update(self):
@@ -67,5 +90,4 @@ class Start_button:
 
     def get_bb(self):
         return self.x - self.width / 2, self.y - self.height / 2, self.x + self.width / 2, self.y + self.height / 2
-
 #game_framework.change_mode(play_mode)
