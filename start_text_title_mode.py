@@ -4,11 +4,11 @@ from sdl2 import SDL_MOUSEMOTION
 from state_machine import StateMachine
 
 class Inactive:
-    def __init__(self, button):
-        self.button = button
+    def __init__(self, text):
+        self.text = text
 
     def enter(self, e):
-        self.button.image = load_image("2DGP_background/start_screen/game_start_1.png")
+        self.text.image = load_image("2DGP_background/start_screen/game_start_1.png")
 
     def exit(self, event):
         pass
@@ -17,28 +17,28 @@ class Inactive:
         pass
 
     def draw(self):
-        self.button.image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
+        self.text.image.draw(self.text.x, self.text.y, self.text.width, self.text.height)
 
 
 class Active:
-    def __init__(self, button):
-        self.button = button
+    def __init__(self, text):
+        self.text = text
 
     def enter(self, e):
-        self.button.is_active = True
-        self.button.image = load_image("2DGP_background/start_screen/game_start_2.png")
+        self.text.is_active = True
+        self.text.image = load_image("2DGP_background/start_screen/game_start_2.png")
 
     def exit(self, event):
-        self.button.is_active = False
+        self.text.is_active = False
 
     def do(self):
         pass
 
     def draw(self):
-        self.button.image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
+        self.text.image.draw(self.text.x, self.text.y, self.text.width, self.text.height)
 
 
-class StartButton:
+class StartText:
     def __init__(self):
         file_path = "2DGP_background/start_screen/"
         self.image = load_image(file_path + 'game_start_1.png')

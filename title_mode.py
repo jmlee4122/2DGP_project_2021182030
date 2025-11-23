@@ -2,20 +2,20 @@ from pico2d import *
 
 import game_framework
 import play_mode
-from exit_button import ExitButton
-from start_button import StartButton
+from exit_text_title_mode import ExitText
+from start_text_title_mode import StartText
 
 image = None
 
 def init():
     file_path = "2DGP_background/start_screen/"
     global image
-    global start_button
-    global exit_button
+    global start_text
+    global exit_text
 
     image = load_image(file_path + 'start_screen.png')
-    start_button = StartButton()
-    exit_button = ExitButton()
+    start_text = StartText()
+    exit_text = ExitText()
 
     try:
         canvas_w, canvas_h = get_canvas_width(), get_canvas_height()
@@ -26,11 +26,11 @@ def init():
 
 
 def update():
-        # if start_button is not None:
-        #     if start_button.is_clicked:
+        # if start_text is not None:
+        #     if start_text.is_clicked:
         #         game_framework.change_mode(play_mode)
-        # if exit_button is not None:
-        #     if exit_button.is_clicked:
+        # if exit_text is not None:
+        #     if exit_text.is_clicked:
         #         game_framework.quit()
         pass
 #game_framework.change_mode(play_mode)
@@ -47,23 +47,23 @@ def draw():
     cy = canvas_h // 2
 
     image.draw(cx, cy, canvas_w, canvas_h)
-    start_button.draw()
-    exit_button.draw()
+    start_text.draw()
+    exit_text.draw()
     update_canvas()
 
 
 def finish():
     global image
-    global start_button
-    global exit_button
+    global start_text
+    global exit_text
 
-    if start_button is not None:
-        del start_button
-        start_button = None
+    if start_text is not None:
+        del start_text
+        start_text = None
 
-    if exit_button is not None:
-        del exit_button
-        exit_button = None
+    if exit_text is not None:
+        del exit_text
+        exit_text = None
 
     # 타이틀 이미지 정리
     if image is not None:
@@ -79,17 +79,17 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            if start_button is not None:
-                if start_button.is_active:
+            if start_text is not None:
+                if start_text.is_active:
                     game_framework.change_mode(play_mode)
-            if exit_button is not None:
-                if exit_button.is_active:
+            if exit_text is not None:
+                if exit_text.is_active:
                     game_framework.quit()
         else:
-            if start_button is not None:
-                start_button.handle_event(event)
-            if exit_button is not None:
-                exit_button.handle_event(event)
+            if start_text is not None:
+                start_text.handle_event(event)
+            if exit_text is not None:
+                exit_text.handle_event(event)
 
 
 def pause():
