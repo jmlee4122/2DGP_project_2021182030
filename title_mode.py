@@ -4,12 +4,10 @@ import exit_button
 import game_framework
 import play_mode
 import start_button
-from exit_button import Exit_button
-from start_button import Start_button
+from exit_button import ExitButton
+from start_button import StartButton
 
 image = None
-start_button = None
-exit_button = None
 
 def init():
     # 타이틀 이미지를 로드
@@ -19,8 +17,8 @@ def init():
     global exit_button
 
     image = load_image(file_path + 'start_screen.png')
-    start_button = Start_button()
-    exit_button = Exit_button()
+    start_button = StartButton()
+    exit_button = ExitButton()
     # 디버그 출력: 실제 캔버스와 이미지 크기 확인
     try:
         canvas_w, canvas_h = get_canvas_width(), get_canvas_height()
@@ -31,7 +29,13 @@ def init():
 
 
 def update():
-    pass
+    if start_button is not None:
+        if start_button.is_clicked:
+            game_framework.change_mode(play_mode)
+    if exit_button is not None:
+        if exit_button.is_clicked:
+            game_framework.quit()
+#game_framework.change_mode(play_mode)
 
 
 def draw():
