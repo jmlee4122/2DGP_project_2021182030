@@ -95,10 +95,6 @@ class Idle:
         else:
             self.basic.face_dir = 1
 
-        # if get_time() - self.basic.wait_time > 3:
-        #     self.basic.attack()
-        #     self.basic.wait_time = get_time()
-
         if self.basic.frame >= 4.9:
             self.basic.attack()
             self.basic.frame = 0

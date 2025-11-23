@@ -96,9 +96,9 @@ class Idle:
         else:
             self.boss.face_dir = 1
 
-        if get_time() - self.boss.wait_time > 1.5:
+        if self.boss.frame >= 4.9:
             self.boss.attack()
-            self.boss.wait_time = get_time()
+            self.boss.frame = 0
 
     def draw(self):
         if self.boss.face_dir == 1:
