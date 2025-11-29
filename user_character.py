@@ -315,8 +315,10 @@ class UserChar:
 
         self.hp_empty_bar = load_image("2DGP_GUI/player_hp_empty.png")
         self.hp_bar = load_image("2DGP_GUI/player_hp.png")
-        self.bar_center_x = 300
-        self.bar_center_y = 50
+        # self.bar_image_size_x = 1211
+        # self.bar_image_size_y = 101
+        self.bar_center_x = 500
+        self.bar_center_y = 900
         self.curr_bar_center_x = self.bar_center_x
         self.curr_bar_center_y = self.bar_center_y
         self.max_bar_size_x = 500
@@ -366,8 +368,9 @@ class UserChar:
     def draw(self):
         self.STATE_MACHINE.draw()
         self.hp_empty_bar.draw(self.bar_center_x, self.bar_center_y, self.max_bar_size_x, self.max_bar_size_y)
-        self.hp_bar.clip_draw(0, 0, self.curr_bar_size_x, self.curr_bar_size_y, self.curr_bar_center_x, self.curr_bar_center_y)
-        self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
+        self.hp_bar.draw(self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
+        #self.hp_bar.clip_draw(0, 0, self.bar_image_size_x, self.bar_image_size_y, self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
+        #self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
         draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):

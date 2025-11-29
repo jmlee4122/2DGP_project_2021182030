@@ -129,6 +129,19 @@ class BossMonster:
         self.user = user_char
         self.is_dead = False
 
+        self.hp_empty_bar = load_image("2DGP_GUI/monster_hp_empty.png")
+        self.hp_bar = load_image("2DGP_GUI/monster_hp.png")
+        # self.bar_image_size_x = 1211
+        # self.bar_image_size_y = 71
+        self.bar_center_x = 1420
+        self.bar_center_y = 900
+        self.curr_bar_center_x = self.bar_center_x
+        self.curr_bar_center_y = self.bar_center_y
+        self.max_bar_size_x = 500
+        self.max_bar_size_y = 30
+        self.curr_bar_size_x =  self.max_bar_size_x
+        self.curr_bar_size_y = self.max_bar_size_y
+
         self.IDLE = Idle(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
@@ -147,9 +160,17 @@ class BossMonster:
                 game_world.stage_switch_requested = True
         self.STATE_MACHINE.update()
 
+        self.curr_bar_size_x = 5 / 3 * self.hp
+        self.curr_bar_center_x = (self.bar_center_x + (self.max_bar_size_x / 2)) - (self.curr_bar_size_x / 2)
+
     def draw(self):
         self.STATE_MACHINE.draw()
-        self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
+        self.hp_empty_bar.draw(self.bar_center_x, self.bar_center_y, self.max_bar_size_x, self.max_bar_size_y)
+        self.hp_bar.draw(self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
+        # self.hp_bar.clip_draw(self.max_bar_size_x - self.curr_bar_size_x, 0,
+        #                       self.bar_image_size_x, self.bar_image_size_y,
+        #                       self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
+        #self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
         draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):

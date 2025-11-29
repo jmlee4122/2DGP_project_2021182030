@@ -129,6 +129,19 @@ class BasicMonster:
         self.user = user_char
         self.is_dead = False
 
+        self.hp_empty_bar = load_image("2DGP_GUI/monster_hp_empty.png")
+        self.hp_bar = load_image("2DGP_GUI/monster_hp.png")
+        # self.bar_image_size_x = 1211
+        # self.bar_image_size_y = 71
+        self.bar_center_x = self.x
+        self.bar_center_y = self.y + 200
+        self.curr_bar_center_x = self.bar_center_x
+        self.curr_bar_center_y = self.bar_center_y
+        self.max_bar_size_x = 300
+        self.max_bar_size_y = 30
+        self.curr_bar_size_x =  self.max_bar_size_x
+        self.curr_bar_size_y = self.max_bar_size_y
+
         self.IDLE = Idle(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
@@ -142,14 +155,20 @@ class BasicMonster:
     def update(self):
         if self.is_dead:
             game_world.remove_object(self)
-            game_world.enemies.remove(self)
+            #game_world.enemies.remove(self)
             if game_world.is_need_stage_switch():
                 game_world.stage_switch_requested = True
         self.STATE_MACHINE.update()
 
+        self.curr_bar_size_x = 3 * self.hp
+        self.curr_bar_center_x = (self.bar_center_x - (self.max_bar_size_x / 2)) + (self.curr_bar_size_x / 2)
+
     def draw(self):
         self.STATE_MACHINE.draw()
-        self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
+        self.hp_empty_bar.draw(self.bar_center_x, self.bar_center_y, self.max_bar_size_x, self.max_bar_size_y)
+        self.hp_bar.draw(self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
+        #self.hp_bar.clip_draw(0, 0, self.bar_image_size_x, self.bar_image_size_y, self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
+        #self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
         draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
@@ -171,4 +190,7 @@ class BasicMonster:
             self.hp -= damage
             print('basic:bullet collision')
             if self.hp <= 0:
+                game_world.remove_collision_object(self)
+                if self in game_world.enemies:
+                    game_world.enemies.remove(self)
                 self.STATE_MACHINE.handle_state_event(('HP', 'DEATH'))
