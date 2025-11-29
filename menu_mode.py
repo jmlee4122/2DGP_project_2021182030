@@ -3,11 +3,11 @@ from sdl2 import SDL_QUIT, SDL_MOUSEBUTTONDOWN
 
 import game_framework
 import game_world
+import play_mode
 import title_mode
 from quit_button import QuitButton
 from restart_button import RestartButton
 from resume_button import ResumeButton
-
 
 def init():
     global restart_button
@@ -55,6 +55,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_MOUSEBUTTONDOWN and restart_button.is_active:
+            play_mode.last_stage = None
             game_framework.change_mode_clear(title_mode)
         elif event.type == SDL_MOUSEBUTTONDOWN and resume_button.is_active:
             game_framework.pop_mode()
