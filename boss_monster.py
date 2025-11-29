@@ -142,6 +142,9 @@ class BossMonster:
         self.curr_bar_size_x =  self.max_bar_size_x
         self.curr_bar_size_y = self.max_bar_size_y
 
+        self.face_image = load_image("2DGP_GUI/boss_face_in_game.png")
+        self.face_image_rate = 560 / 562
+
         self.IDLE = Idle(self)
         self.DEATH = Death(self)
         self.STATE_MACHINE = StateMachine(
@@ -167,6 +170,7 @@ class BossMonster:
         self.STATE_MACHINE.draw()
         self.hp_empty_bar.draw(self.bar_center_x, self.bar_center_y, self.max_bar_size_x, self.max_bar_size_y)
         self.hp_bar.draw(self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
+        self.face_image.composite_draw(0, 'h', 1920 - 150, 900, 200, 200 * self.face_image_rate)
         # self.hp_bar.clip_draw(self.max_bar_size_x - self.curr_bar_size_x, 0,
         #                       self.bar_image_size_x, self.bar_image_size_y,
         #                       self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)

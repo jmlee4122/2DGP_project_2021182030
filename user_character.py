@@ -326,6 +326,9 @@ class UserChar:
         self.curr_bar_size_x =  self.max_bar_size_x
         self.curr_bar_size_y = self.max_bar_size_y
 
+        self.face_image = load_image("2DGP_GUI/uc_face_in_game.png")
+        self.face_image_rate = 560 / 562
+
         self.font = load_font('ENCR10B.TTF', 16)
 
         # 공격 시작 시각 기록
@@ -369,6 +372,7 @@ class UserChar:
         self.STATE_MACHINE.draw()
         self.hp_empty_bar.draw(self.bar_center_x, self.bar_center_y, self.max_bar_size_x, self.max_bar_size_y)
         self.hp_bar.draw(self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
+        self.face_image.composite_draw(0, 'h', 150, 900, 200, 200 * self.face_image_rate)
         #self.hp_bar.clip_draw(0, 0, self.bar_image_size_x, self.bar_image_size_y, self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
         #self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
         draw_rectangle(*self.get_bb())
