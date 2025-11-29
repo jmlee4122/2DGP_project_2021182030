@@ -319,8 +319,8 @@ class UserChar:
         # self.bar_image_size_y = 101
         self.bar_center_x = 500
         self.bar_center_y = 900
-        self.curr_bar_center_x = self.bar_center_x
-        self.curr_bar_center_y = self.bar_center_y
+        self.curr_bar_center_x = 500
+        self.curr_bar_center_y = 900
         self.max_bar_size_x = 500
         self.max_bar_size_y = 30
         self.curr_bar_size_x =  self.max_bar_size_x

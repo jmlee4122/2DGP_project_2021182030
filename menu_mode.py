@@ -56,6 +56,7 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_MOUSEBUTTONDOWN and restart_button.is_active:
             play_mode.last_stage = None
+            play_mode.saved_user_char = None
             game_framework.change_mode_clear(title_mode)
         elif event.type == SDL_MOUSEBUTTONDOWN and resume_button.is_active:
             game_framework.pop_mode()
