@@ -2,7 +2,7 @@ from random import randint
 
 from pico2d import *
 
-
+import end_mode
 import game_world
 import menu_mode
 from back_ground import BackGround
@@ -25,7 +25,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.push_mode(menu_mode)
+            game_framework.push_mode(end_mode)
         else:
             if user_char is not None:
                 user_char.handle_event(event)
