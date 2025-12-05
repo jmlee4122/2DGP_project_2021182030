@@ -16,8 +16,8 @@ def init():
     global quit_button
 
     image = load_image(file_path + 'end_board.png')
-    restart_button = RestartButton(1920 / 2, 1080 * 0.5)
-    quit_button = QuitButton(1920 / 2, 1080 * 0.2)
+    restart_button = RestartButton(1920 / 2 - 400, 1080 * 0.3)
+    quit_button = QuitButton(1920 / 2 + 400, 1080 * 0.3)
 
     game_world.add_menu_object(restart_button, 0)
     game_world.add_menu_object(quit_button, 0)
