@@ -14,9 +14,9 @@ def init():
     global resume_button
     global quit_button
 
-    restart_button = RestartButton()
-    resume_button = ResumeButton()
-    quit_button = QuitButton()
+    restart_button = RestartButton(1920 / 2, 1080 * 0.5)
+    resume_button = ResumeButton(1920 / 2, 1080 * 0.8)
+    quit_button = QuitButton(1920 / 2, 1080 * 0.2)
 
     game_world.add_menu_object(restart_button, 0)
     game_world.add_menu_object(resume_button, 0)

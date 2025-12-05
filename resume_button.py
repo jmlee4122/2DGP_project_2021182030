@@ -41,13 +41,13 @@ class Active:
         self.button.text_image.draw(self.button.x, self.button.y, self.button.width, self.button.height)
 
 class ResumeButton:
-    def __init__(self):
+    def __init__(self, x, y):
         file_path = "2DGP_GUI/"
         self.text_image = load_image(file_path + 'resume_basic.png')
         self.button_image = load_image(file_path + 'button.png')
 
-        self.x = 1920 / 2
-        self.y = 1080 * 0.8
+        self.x = x
+        self.y = y
         self.width = 450
         self.height = 150
         self.is_active = False
