@@ -129,7 +129,8 @@ def update():
         if last_stage != back_ground.stage_num:
             if last_stage == 3:
                 print("Boss Stage Clear!")
-                game_framework.change_mode(end_mode)
+                game_framework.push_mode(menu_mode)
+                return
             saved_user_char = user_char
             finish()
             init()
