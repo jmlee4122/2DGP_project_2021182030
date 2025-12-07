@@ -29,7 +29,7 @@ class Slash:
             Slash.image.clip_draw(int(self.frame) * 300, 0, 300, 300, self.x, self.y)
         else:
             Slash.image.clip_composite_draw(int(self.frame) * 300, 0, 300, 300, 0, 'h', self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         dt = min(game_framework.frame_time, 0.06)

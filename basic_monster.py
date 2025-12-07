@@ -169,7 +169,7 @@ class BasicMonster:
         self.hp_bar.draw(self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
         #self.hp_bar.clip_draw(0, 0, self.bar_image_size_x, self.bar_image_size_y, self.curr_bar_center_x, self.curr_bar_center_y, self.curr_bar_size_x, self.curr_bar_size_y)
         #self.font.draw(self.x - 40, self.y + 100, f'Hp {self.hp:02d}', (255, 255, 0))
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         self.STATE_MACHINE.handle_state_event(('INPUT', event))

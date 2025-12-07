@@ -15,7 +15,7 @@ class Bullet:
             Bullet.image.draw(self.x, self.y, 24, 14)
         else:
             Bullet.image.composite_draw(0, 'h', self.x, self.y, 24, 14)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
 
     def update(self):

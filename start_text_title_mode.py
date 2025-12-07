@@ -86,7 +86,7 @@ class StartText:
 
     def draw(self):
         self.STATE_MACHINE.draw()
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         self.STATE_MACHINE.handle_state_event(('INPUT', event))

@@ -24,7 +24,7 @@ class Fire:
             Fire.image.draw(self.x, self.y, 200, 200)
         else:
             Fire.image.composite_draw(0, 'h', self.x, self.y, 200, 200)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         dt = min(game_framework.frame_time, 0.06)
