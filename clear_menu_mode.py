@@ -15,9 +15,9 @@ def init():
     global restart_button
     global quit_button
 
-    image = load_image(file_path + 'end_board.png')
-    restart_button = RestartButton(1920 / 2 - 400, 1080 * 0.3)
-    quit_button = QuitButton(1920 / 2 + 400, 1080 * 0.3)
+    image = load_image(file_path + 'clear_board.png')
+    restart_button = RestartButton(1920 / 2, 1080 * 0.55)
+    quit_button = QuitButton(1920 / 2, 1080 * 0.35)
 
     game_world.add_menu_object(restart_button, 0)
     game_world.add_menu_object(quit_button, 0)
@@ -47,7 +47,7 @@ def draw():
 
     game_world.render()
 
-    image.draw(cx, cy, canvas_w, canvas_h)
+    image.draw(cx, cy)
     game_world.render_menu()
     update_canvas()
 

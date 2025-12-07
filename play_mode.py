@@ -2,7 +2,7 @@ from random import randint
 
 from pico2d import *
 
-import end_mode
+import clear_menu_mode
 import game_world
 import menu_mode
 from back_ground import BackGround
@@ -25,7 +25,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.push_mode(end_mode)
+            game_framework.push_mode(menu_mode)
         else:
             if user_char is not None:
                 user_char.handle_event(event)
@@ -128,8 +128,9 @@ def update():
     if back_ground:
         if last_stage != back_ground.stage_num:
             if last_stage == 3:
-                print("Boss Stage Clear!")
-                game_framework.push_mode(end_mode)
+                # print("Boss Stage Clear!")
+                # delay(0.5)
+                # game_framework.push_mode(clear_menu_mode)
                 return
             saved_user_char = user_char
             finish()

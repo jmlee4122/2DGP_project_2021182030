@@ -1,6 +1,7 @@
-from pico2d import load_image, get_time, draw_rectangle, load_font
+from pico2d import load_image, get_time, draw_rectangle, load_font, delay
 from sdl2 import SDLK_a, SDL_KEYDOWN
 
+import clear_menu_mode
 import game_framework
 import game_world
 from slash import Slash
@@ -52,6 +53,8 @@ class Death:
         self.frame = int(self.boss.frame)
         if self.frame >= 9:
             self.boss.is_dead = True
+            delay(1.0)
+            game_framework.push_mode(clear_menu_mode)
         if self.boss.face_dir == 1:
             if self.frame < 5:
                 self.clip_height = 1
