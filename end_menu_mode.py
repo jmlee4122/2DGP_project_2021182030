@@ -8,14 +8,17 @@ import title_mode
 from quit_button import QuitButton
 from restart_button import RestartButton
 
-
 def init():
     file_path = "2DGP_GUI/"
     global image
     global restart_button
     global quit_button
 
-    image = load_image(file_path + 'clear_board.png')
+    if play_mode.user_char.is_dead:
+        image = load_image(file_path + 'death_board.png')
+    else:
+        image = load_image(file_path + 'clear_board.png')
+
     restart_button = RestartButton(1920 / 2, 1080 * 0.55)
     quit_button = QuitButton(1920 / 2, 1080 * 0.35)
 

@@ -1,7 +1,7 @@
 from pico2d import load_image, draw_rectangle, get_time, load_font, delay
 from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_a, SDLK_SPACE, SDLK_DOWN, SDLK_q
 
-import clear_menu_mode
+import end_menu_mode
 import game_framework
 import game_world
 from bullet import Bullet
@@ -130,7 +130,7 @@ class Death:
         else:
             self.uc.is_dead = True
             delay(1.0)
-            game_framework.push_mode(clear_menu_mode)
+            game_framework.push_mode(end_menu_mode)
 
     def draw(self):
         if self.uc.face_dir == 1:

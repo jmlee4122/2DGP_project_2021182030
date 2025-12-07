@@ -2,7 +2,7 @@ from random import randint
 
 from pico2d import *
 
-import clear_menu_mode
+import end_menu_mode
 import game_world
 import menu_mode
 from back_ground import BackGround
