@@ -2,8 +2,8 @@ from pico2d import *
 
 import game_framework
 import play_mode
-from exit_text_title_mode import ExitText
-from start_text_title_mode import StartText
+from exit_text import ExitText
+from start_text import StartText
 
 image = None
 
