@@ -11,13 +11,17 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 class Fire:
     image = None
-
+    sound = None
     def __init__(self, x, y, velocity):
         if not Fire.image:
             file_path = '2DGP_attack/'
             Fire.image = load_image(file_path + 'basic_fire.png')
+        if not Fire.sound:
+            Fire.sound = load_wav('2DGP_sound/fire_sound.wav')
+            Fire.sound.set_volume(32)
         self.x, self.y, self.velocity = x, y, velocity
         self.range, self.dis = 700, 0
+        Fire.sound.play()
 
     def draw(self):
         if self.velocity < 0:
