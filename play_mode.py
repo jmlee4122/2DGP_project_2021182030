@@ -69,11 +69,11 @@ def init():
         basic_y = 400
         basic_num = 1
     elif back_ground.stage_num == 2:
-        uc_x = 960
+        uc_x = 700
         uc_y = 400
         basic_x.append(randint(1300, 1600))
-        basic_x.append(randint(1300, 1600))
-        basic_x.append(randint(300, 600))
+        basic_x.append(randint(1000, 1300))
+        basic_x.append(randint(200, 400))
         basic_y = 400
         basic_num = 3
     elif back_ground.stage_num == 3:
