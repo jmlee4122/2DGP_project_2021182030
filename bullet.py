@@ -3,12 +3,18 @@ import game_world
 
 class Bullet:
     image = None
+    sound = None
     def __init__(self, x, y, velocity):
         if not Bullet.image:
             file_path = '2DGP_attack/'
             Bullet.image = load_image(file_path + 'uc_bullet.png')
+        if not Bullet.sound:
+            Bullet.sound = load_wav('2DGP_sound/gun_shot_sound.wav')
+            Bullet.sound.set_volume(32)
         self.x, self.y, self.velocity = x, y, velocity
         self.range, self.dis = 500, 0
+
+        Bullet.sound.play()
 
     def draw(self):
         if self.velocity > 0:
