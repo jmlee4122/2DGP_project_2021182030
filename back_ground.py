@@ -123,9 +123,6 @@ class BackGround:
         self.STAGE_01 = Stage01(self)
         self.STAGE_02 = Stage02(self)
         self.STAGE_03 = Stage03(self)
-        self.bgm = load_music('2DGP_sound/back_ground_sound.mp3')
-        self.bgm.set_volume(32)
-        self.bgm.repeat_play()
 
         self.initial_stage = self.STAGE_01
         if last_stage == 0:

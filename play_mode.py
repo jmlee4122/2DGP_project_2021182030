@@ -18,6 +18,7 @@ boss_monster = None
 last_stage = None
 
 saved_user_char = None
+sound = None
 
 def handle_events():
     event_list = get_events()
@@ -44,6 +45,12 @@ def init():
     global last_stage
 
     global saved_user_char
+
+    global sound
+    sound = load_music('2DGP_sound/play_mode_sound.mp3')
+    sound.set_volume(32)
+    sound.repeat_play()
+
 
     game_world.enemies.clear()
     game_world.collision_pairs.clear()
