@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle
+from pico2d import load_image, draw_rectangle, load_wav
 
 import game_framework
 import game_world
@@ -15,14 +15,18 @@ FRAMES_PER_ACTION = 8
 
 class Slash:
     image = None
-
+    sound = None
     def __init__(self, x, y, velocity):
         if not Slash.image:
             file_path = '2DGP_attack/'
             Slash.image = load_image(file_path + 'boss_slash.png')
+        if not Slash.sound:
+            Slash.sound = load_wav('2DGP_sound/slash_sound.wav')
+            Slash.sound.set_volume(32)
         self.x, self.y, self.velocity = x, y, velocity
         self.range, self.dis = 700, 0
         self.frame = 0
+        Slash.sound.play()
 
     def draw(self):
         if self.velocity < 0:
