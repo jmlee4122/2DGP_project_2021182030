@@ -1,4 +1,4 @@
-from pico2d import draw_rectangle, load_image, get_canvas_height
+from pico2d import draw_rectangle, load_image, get_canvas_height, load_wav
 from sdl2 import SDL_MOUSEMOTION
 
 from state_machine import StateMachine
@@ -27,6 +27,7 @@ class Active:
     def enter(self, e):
         self.text.is_active = True
         self.text.image = load_image("2DGP_background/start_screen/game_start_2.png")
+        StartText.sound.play()
 
     def exit(self, e):
         self.text.is_active = False
@@ -39,7 +40,11 @@ class Active:
 
 
 class StartText:
+    sound = None
     def __init__(self):
+        if StartText.sound is None:
+            StartText.sound = load_wav("2DGP_sound/button_hover_sound.wav")
+            StartText.sound.set_volume(32)
         file_path = "2DGP_background/start_screen/"
         self.image = load_image(file_path + 'game_start_1.png')
 

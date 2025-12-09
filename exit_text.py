@@ -1,4 +1,4 @@
-from pico2d import load_image, get_canvas_height
+from pico2d import load_image, get_canvas_height, load_wav
 from pico2d import draw_rectangle
 from sdl2 import SDL_MOUSEMOTION
 
@@ -27,6 +27,7 @@ class Active:
     def enter(self, e):
         self.text.is_active = True
         self.text.image = load_image("2DGP_background/start_screen/exit_2.png")
+        ExitText.sound.play()
 
     def exit(self, e):
         self.text.is_active = False
@@ -38,7 +39,11 @@ class Active:
         self.text.image.draw(self.text.x, self.text.y, self.text.width, self.text.height)
 
 class ExitText:
+    sound = None
     def __init__(self):
+        if ExitText.sound is None:
+            ExitText.sound = load_wav("2DGP_sound/button_hover_sound.wav")
+            ExitText.sound.set_volume(32)
         file_path = "2DGP_background/start_screen/"
         self.image = load_image(file_path + 'exit_1.png')
 
