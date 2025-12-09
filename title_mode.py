@@ -6,12 +6,18 @@ from exit_text import ExitText
 from start_text import StartText
 
 image = None
+sound = None
 
 def init():
     file_path = "2DGP_background/start_screen/"
     global image
     global start_text
     global exit_text
+
+    global sound
+    sound = load_music('2DGP_sound/title_mode_sound.mp3')
+    sound.set_volume(32)
+    sound.repeat_play()
 
     image = load_image(file_path + 'start_screen.png')
     start_text = StartText()
