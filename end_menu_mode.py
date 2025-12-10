@@ -1,4 +1,4 @@
-from pico2d import clear_canvas, update_canvas, get_events, load_image, get_canvas_width, get_canvas_height
+from pico2d import clear_canvas, update_canvas, get_events, load_image, get_canvas_width, get_canvas_height, load_wav
 from sdl2 import SDL_QUIT, SDL_MOUSEBUTTONDOWN
 
 import game_framework
@@ -13,17 +13,23 @@ def init():
     global image
     global restart_button
     global quit_button
+    global sound
 
     if play_mode.user_char.is_dead:
         image = load_image(file_path + 'death_board.png')
+        sound = load_wav('2DGP_sound/game_over_sound.wav')
     else:
         image = load_image(file_path + 'clear_board.png')
+        sound = load_wav('2DGP_sound/game_clear_sound.wav')
 
     restart_button = RestartButton(1920 / 2, 1080 * 0.55)
     quit_button = QuitButton(1920 / 2, 1080 * 0.35)
 
     game_world.add_menu_object(restart_button, 0)
     game_world.add_menu_object(quit_button, 0)
+
+    sound.set_volume(64)
+    sound.play()
 
 def finish():
     global restart_button
